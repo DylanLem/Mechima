@@ -6,11 +6,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
-    public class Mech : Entity
+    public class Mech : ControllableEntity, IHasStats
     {
 
         private Vector2 thrustVector;
 
+
+        public Dictionary<string, float> Stats { get; set; } = new Dictionary<string, float>();
+        public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
         public Dictionary<string, Equipment> Equipment { get;private set; } = new Dictionary<string, Equipment>() 
         {
             {"Primary", null},
@@ -20,7 +23,7 @@ namespace Mechima
         
         public Mech() : base() 
         {
-            HasStats = true;
+            
 
             Stats  = new Dictionary<string, float>()
             {
@@ -50,7 +53,7 @@ namespace Mechima
         {
 
 
-            
+            DisplayManager.RequestBlit(new BlitRequest("accel: " + ((IHasStats)this).GetStat("acceleration").ToString(), Color.White, this.ScreenPosition, AnchorPoint.TopCenter, 0, 1));
 
             base.Update(gameTime);
 
@@ -69,19 +72,7 @@ namespace Mechima
             
         }
 
-        public override void Move(Vector2 displacement)
-        {
-            //DisplayManager.RequestBlit(new BlitRequest("accel: " + this.GetStat("acceleration").ToString(), Color.White, this.ScreenPosition, AnchorPoint.TopCenter, 0, 1));
 
-            
-            if (this.Velocity.Length() > 0)
-                this.Velocity /= GetStat("drag");
-
-            if (Velocity.Length() < 0.05)
-                this.Velocity = Vector2.Zero;
-
-            base.Move(displacement);
-        }
 
         public void EquipItem(Equipment equipment, string slot)
         {
@@ -96,14 +87,14 @@ namespace Mechima
         {
             
 
-            Vector2 force = GetStat("acceleration") * direction * GameManager.lastTick;
+            Vector2 force = ((IHasStats)this).GetStat("acceleration") * direction * GameManager.lastTick;
             thrustVector += force;
 
             
 
             this.Velocity = this.Velocity + force;
-            if(this.Velocity.Length() > GetStat("maxThrust")) 
-                NormalizeToMagnitude(Velocity, GetStat("maxThrust"));
+            if(this.Velocity.Length() > ((IHasStats)this).GetStat("maxThrust")) 
+                NormalizeToMagnitude(Velocity, ((IHasStats)this).GetStat("maxThrust"));
 
             
         }
@@ -126,7 +117,7 @@ namespace Mechima
             this.Color = new Color(0.95f, 0, 0);
 
             this.Velocity -= this.Velocity * (3 * GameManager.lastTick);
-            AddModifier("acceleration", 250f);
+            ((IHasStats)this).AddModifier("acceleration", 250f);
             
         }
 

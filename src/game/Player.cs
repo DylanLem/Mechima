@@ -8,7 +8,7 @@ namespace Mechima
 {
     public class Player
     {
-        public Entity controlledEntity;
+        public ControllableEntity controlledEntity;
 
         private Texture2D cursor;
 
@@ -24,7 +24,7 @@ namespace Mechima
 
 
         //Grants the player control of a given entity
-        public void TakeControl(Entity entity)
+        public void TakeControl(ControllableEntity entity)
         {
             if (controlledEntity != null) controlledEntity.isControlled = false;
 
@@ -42,7 +42,7 @@ namespace Mechima
             foreach (ActionType action in inputActions)
             {
                 
-                ((IControllable)controlledEntity).QueueAction(action);
+                controlledEntity.QueueAction(action);
             }
             
         }
