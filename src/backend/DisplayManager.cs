@@ -3,44 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
 namespace Mechima
 {
-    public struct BlitRequest
-    {
-        public string RequestType { get { return type; } set { type = value != "sprite" && value != "string" ? null : value; } }
-        private string type { get; set; }
-
-        public string Message;
-        public Texture2D Sprite;
-        public Color Color;
-        public Vector2 ScreenPosition;
-
-        public BlitRequest( string _message, Color _color, Vector2 _screenPosition)
-        {
-            type = "string";
-            Message = _message;
-            Color = _color;
-            Sprite = null;
-            ScreenPosition = _screenPosition;
-        }
-
-        public BlitRequest(string _type, Texture2D _sprite, Color _color, Vector2 _screenPosition)
-        {
-            type = "sprite";
-            Message = null;
-            Color = _color;
-            Sprite = _sprite;
-            ScreenPosition = _screenPosition;
-        }
-
-
-        public override string ToString()
-        {
-            string s = String.Format("blitrequest type:{0}", RequestType);
-            return base.ToString();
-        }
-    }
 
 
     public static class DisplayManager
@@ -57,15 +23,13 @@ namespace Mechima
 
 
         public static Dictionary<string, Texture2D> spriteMap = new Dictionary<string, Texture2D>();
-        public static Dictionary<string, AnimData> animationMap = new Dictionary<string, AnimData>();
+        private static Dictionary<string, AnimData> AnimationMap = new Dictionary<string, AnimData>();
 
 
         public static readonly List<string> spritePaths = new List<string>()
         {
-            "player_new", "headsheet","crosshair","sword"
+            "player_new", "headsheet","crosshair","sword","knight-sheet"
         };
-
-
 
 
 
@@ -73,7 +37,9 @@ namespace Mechima
         {
             foreach(Drawable drawable in Drawables)
             {
-                drawable.Animate(gameTime);
+                if (drawable.IsAnimated && drawable.AnimData != null)
+                    drawable.AnimData.Animate();
+
                 drawable.DetermineScreenPosition();
             }
         }
@@ -87,15 +53,24 @@ namespace Mechima
                 drawable.Draw(spriteBatch);
 
             foreach(BlitRequest request in stringBlitQueue)
-                spriteBatch.DrawString(defaultFont, request.Message, request.ScreenPosition, request.Color);
+                spriteBatch.DrawString(defaultFont, request.Message, request.ScreenPosition, request.Color, request.Rotation, request.Origin, request.Scale, SpriteEffects.None, 1f);
             foreach (BlitRequest request in spriteBlitQueue)
-                spriteBatch.Draw(request.Sprite, request.ScreenPosition, request.Color);
+                spriteBatch.Draw(request.Sprite, request.ScreenPosition, null, request.Color, request.Rotation, request.Origin, request.Scale, SpriteEffects.None, 1f);
 
             spriteBatch.End();
 
             spriteBlitQueue.Clear();
             stringBlitQueue.Clear();
         }
+
+
+        public static void LoadTextures(ContentManager content)
+        {
+            foreach (string spritename in spritePaths)
+                spriteMap[spritename] = content.Load<Texture2D>(spritename);
+        }
+
+
 
 
         public static void RequestBlit(BlitRequest request)
@@ -110,11 +85,54 @@ namespace Mechima
                 stringBlitQueue.Add(request);
         }
 
+
+
+        public static AnimData GetAnim(string spriteName)
+        {
+            if (!AnimationMap.ContainsKey(spriteName))
+                AnimationMap[spriteName] = ContentLoader.LoadAnimation(spriteName);
+
+            return AnimationMap[spriteName];
+        }
+
+
+
         public static void SetScreenResolution(int x, int y)
         {
             graphicsDevice.PreferredBackBufferWidth = x;
             graphicsDevice.PreferredBackBufferHeight = y;
             graphicsDevice.ApplyChanges();
+        }
+
+
+
+        //converts anchorpoint enum value to texture offset vector between 0 and 1
+        public static Vector2 GetAnchorVector(Vector2 TextureDimension, AnchorPoint anchor)
+        {
+            switch (anchor)
+            {
+                case AnchorPoint.TopLeft:
+                    return Vector2.Zero;
+                case AnchorPoint.TopCenter:
+                    return new Vector2(0.5f * TextureDimension.X, 0);
+                case AnchorPoint.TopRight:
+                    return new Vector2(1f * TextureDimension.X, 0);
+                case AnchorPoint.CenterLeft:
+                    return new Vector2(0, 0.5f * TextureDimension.Y);
+                case AnchorPoint.Center:
+                    return new Vector2(0.5f * TextureDimension.X, 0.5f * TextureDimension.Y);
+                case AnchorPoint.CenterRight:
+                    return new Vector2(1.0f * TextureDimension.X, 0.5f * TextureDimension.Y);
+                case AnchorPoint.BottomLeft:
+                    return new Vector2(0f, 1.0f * TextureDimension.Y);
+                case AnchorPoint.BottomCenter:
+                    return new Vector2(0.5f * TextureDimension.X, 1.0f * TextureDimension.Y);
+                case AnchorPoint.BottomRight:
+                    return new Vector2(1.0f * TextureDimension.X, 1.0f * TextureDimension.Y);
+
+                default:
+                    throw new Exception("wtf anchorpoint is this: " + anchor);
+            }
         }
 
     }

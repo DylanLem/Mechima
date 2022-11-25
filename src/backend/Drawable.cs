@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
+    public enum AnchorPoint { TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight}
+    
 
     /*
      * Curse ye, all who enter here
@@ -17,7 +19,7 @@ namespace Mechima
 
         protected float Rotation { get; set; }
         protected bool Enabled { get; set; }
-        public bool Animated { get; set; }
+        public bool IsAnimated { get; set; }
         public AnimData AnimData { get; set; }
         public int animSpeed { get; set; }
         private double animTimer { get; set; }
@@ -28,25 +30,10 @@ namespace Mechima
         
         public Vector2 ScreenPosition { get; set; }
 
-        //Name of animation and list of texture indices for frames
-        protected Dictionary<AnimationState, List<int>> Animations { get; set; }
 
-        //name and index of current frame in animation (the index corresponds to which frame it is on within the animation, not its spritesheet location)
-        protected KeyValuePair<AnimationState, int> CurrentAnim { 
-            get {return _currentAnim; } 
-            set { _currentAnim = this.Animations.ContainsKey(value.Key) ? 
-                    value 
-                    : new KeyValuePair<AnimationState,int> (AnimationState.Default, 0); 
-                }
-        } 
-
-        private KeyValuePair<AnimationState, int> _currentAnim { get; set; }
-
-        //index location on the sheet
-        protected int TextureIndex { get; set; }
 
         //calculates the rectangular slice of the texture in current animation frame
-        protected Rectangle SpriteCell { get => new Rectangle((int)CellSize.X * (TextureIndex % (int)(Texture.Width / CellSize.X)), (int)CellSize.Y * (int)(CellSize.X * TextureIndex / Texture.Width), (int)CellSize.X, (int)CellSize.Y); }
+        protected Rectangle SpriteCell { get => AnimData != null ? AnimData.SpriteCell : this.Texture.Bounds; }
         public Vector2 CellSize { get; set; } //this value can change depending on the resolution of each spritesheet. Must be set externally
 
 
@@ -54,20 +41,10 @@ namespace Mechima
         public Drawable(Texture2D sprite=null)
         {
             DisplayManager.Drawables.Add(this);
-            animSpeed = 85;
-            animTimer = 0;
 
-            this.Texture = sprite != null? sprite : DisplayManager.spriteMap["player_new"];
 
-            //Defaults to single texture sheet with no animation
-            Animations = new Dictionary<AnimationState, List<int>>
-            {
-                { AnimationState.Default, new List<int>(){0,1,2,3} }
-            };
-
-            CellSize = new Vector2(Texture.Width, Texture.Height); 
-            CurrentAnim =  new KeyValuePair<AnimationState, int> (AnimationState.Default, 0);
-            Animated = false;
+            
+            IsAnimated = false;
             Enabled = true;
             Color = Color.White;
             
@@ -89,32 +66,15 @@ namespace Mechima
 
             if (this.AnimData != null) AnimData.Animate();
         }
-        //Call this to proceed along to the next animation frame
-        public void Animate(GameTime gameTime)
+
+
+
+        public void SetSprite(string sprite, bool animated = false)
         {
-            if (!Enabled || !Animated) return;
+            this.Texture = sprite != null ? DisplayManager.spriteMap[sprite] : DisplayManager.spriteMap["player_new"];
+            this.IsAnimated = animated;
 
-            animTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (animTimer < animSpeed) return;
-
-            animTimer = 0;
-
-            TextureIndex = Animations[CurrentAnim.Key][CurrentAnim.Value];
-            int nextIndex = CurrentAnim.Value + 1 == Animations[CurrentAnim.Key].Count ? 0 : CurrentAnim.Value + 1;
-
-            CurrentAnim = new KeyValuePair<AnimationState, int>(CurrentAnim.Key, nextIndex);
-        }
-
-
-        public void AddAnimState(AnimationState state, List<int> cells)
-        {
-            if(Animations.ContainsKey(state))   System.Diagnostics.Debug.WriteLine("This animation already exists. Overwriting. anim: " + state);
-            Animations[state] = cells;
-        }
-
-        public void SetSprite(string spriteName)
-        {
+            this.AnimData = DisplayManager.GetAnim(sprite);
 
         }
 
@@ -123,6 +83,7 @@ namespace Mechima
         {
             System.Diagnostics.Debug.WriteLine("virtual function called in Drawable.cs. this really shouldn't be called.");
         }
+
 
     }
 

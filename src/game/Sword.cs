@@ -29,7 +29,7 @@ namespace Mechima
 
         private Vector2 orbitVector { get => GameManager.MakeVector(Rotation, orbitDistance); }
         
-        public Sword(Texture2D sprite) : base(sprite)
+        public Sword() : base()
         {
             this.swingTime = 3.0f;
             this.coolDown = 1.0f;

@@ -30,12 +30,10 @@ namespace Mechima
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            
 
-            foreach(string spritename in DisplayManager.spritePaths)
-            {
-                DisplayManager.spriteMap[spritename] = Content.Load<Texture2D>(spritename);
-            }
+
+            DisplayManager.LoadTextures(Content);
+
             DisplayManager.defaultFont = Content.Load<SpriteFont>("font");
 
             GameManager.Initialize();

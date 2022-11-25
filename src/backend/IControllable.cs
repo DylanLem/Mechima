@@ -13,13 +13,15 @@ namespace Mechima
     {
         Dictionary<ActionType, Action> ActionMap {get;set;}
 
+        List<ActionType> QueuedActions { get; set; }
+
         bool isControlled { get; set; }
 
-        public void SetControl(ActionType actionType, Action mappedAction) {
+        void SetControl(ActionType actionType, Action mappedAction) {
             ActionMap[actionType] = mappedAction;
         }
 
-        public void SetControl(List<KeyValuePair<ActionType,Action>> actions)
+        void SetControl(List<KeyValuePair<ActionType,Action>> actions)
         {
             foreach(KeyValuePair<ActionType,Action> action in actions)
             {
@@ -27,10 +29,19 @@ namespace Mechima
             }
         }
 
-        public void InvokeAction(ActionType actionType)
+        void QueueAction(ActionType actionType)
         {
-            if(this.ActionMap.ContainsKey(actionType))
-                this.ActionMap[actionType].Invoke();
+            if (this.ActionMap.ContainsKey(actionType))
+                this.QueuedActions.Add(actionType);
+        }
+
+        void InvokeQueuedActions()
+        {
+            foreach(ActionType action in QueuedActions)
+            {
+                this.ActionMap[action].Invoke();
+            }
+            this.QueuedActions.Clear();
         }
     }
 }

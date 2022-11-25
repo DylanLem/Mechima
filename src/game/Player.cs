@@ -22,6 +22,8 @@ namespace Mechima
             
         }
 
+
+        //Grants the player control of a given entity
         public void TakeControl(Entity entity)
         {
             if (controlledEntity != null) controlledEntity.isControlled = false;
@@ -40,7 +42,7 @@ namespace Mechima
             foreach (ActionType action in inputActions)
             {
                 
-                ((IControllable)controlledEntity).InvokeAction(action);
+                ((IControllable)controlledEntity).QueueAction(action);
             }
             
         }

@@ -13,24 +13,28 @@ namespace Mechima
         public Vector2 Velocity { get; set; }
         public Dictionary<ActionType, Action> ActionMap { get; set; }
 
+        public List<ActionType> QueuedActions { get; set; } = new List<ActionType>();
+
         private bool hasCollision;
-        protected bool HasStats;
+        
 
         public bool isControlled { get; set; }
 
+
+        protected bool HasStats;
         public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
         public Dictionary<string, float> Stats { get; set; } = new Dictionary<string, float>();
 
-        public Entity(Texture2D sprite=null) : base(sprite)
-        {
-           
-
-        }
+            
 
 
         public virtual void Update(GameTime gameTime) 
         {
-            if (Texture == null || Animations[AnimationState.Default].Count == 0)
+            IControllable thisCollidable = (IControllable)this;
+
+            thisCollidable.InvokeQueuedActions();
+
+            if (Texture == null)
                 Enabled = false;
             
             if (this.Velocity.Length() > 0) Move(this.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);

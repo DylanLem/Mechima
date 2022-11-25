@@ -18,7 +18,7 @@ namespace Mechima
         public Entity Parent;
         public bool IsAnchored { get; set; }
 
-        public Equipment(Texture2D sprite=null):base(sprite)
+        public Equipment():base()
         {
 
         }

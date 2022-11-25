@@ -44,16 +44,19 @@ namespace Mechima
             DisplayManager.SetScreenResolution((int)DisplayManager.Resolution.X, (int)DisplayManager.Resolution.Y);
 
 
-            Sword sword = (Sword)AddEntity(new Sword(DisplayManager.spriteMap["sword"]));
+            Sword sword = (Sword)AddEntity(new Sword());
+            sword.SetSprite("sword");
 
-            Mech mech = (Mech)AddEntity(new Mech(DisplayManager.spriteMap["headsheet"]));
+            Mech mech = (Mech)AddEntity(new Mech());
+            mech.SetSprite("knight-sheet", true);
+
             mech.EquipItem(sword,"Primary");
 
 
             _player.controlledEntity = mech;
             _player.controlledEntity.WorldPosition = new Vector2(0, 0);
             _player.controlledEntity.CellSize = new Vector2(8,8);
-            _player.controlledEntity.Animated = true;
+           
 
         }
 
@@ -61,7 +64,7 @@ namespace Mechima
         public static void Update(GameTime gameTime)
         {
             lastTick = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            DisplayManager.RequestBlit(new BlitRequest(lastTick.ToString(), Color.White, Vector2.Zero));
+            DisplayManager.RequestBlit(new BlitRequest(lastTick.ToString(), Color.White, Vector2.Zero, AnchorPoint.TopLeft));
 
             effectTimer += lastTick;
             pauseTimer += lastTick;
@@ -69,20 +72,21 @@ namespace Mechima
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 TogglePause(!isPaused);
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                ContentLoader.LoadAnimation("hihi");
+            
 
             if (isPaused)
             {
-                DisplayManager.RequestBlit(new BlitRequest("GAME PAUSED", Color.Black, DisplayManager.Resolution / 2));
+                DisplayManager.RequestBlit(new BlitRequest("GAME PAUSED", Color.Black, DisplayManager.Resolution / 2, AnchorPoint.Center, MathF.PI, 4));
                 return;
             }
 
 
 
-            _player.Update();
+            
             foreach (Entity e in Entities)
                 e.Update(gameTime);
+
+            _player.Update();
 
             if (effectTimer >= effectTime)
                 effectTimer = 0;

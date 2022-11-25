@@ -9,16 +9,16 @@ namespace Mechima
     public class Mech : Entity
     {
 
-        
+        private Vector2 thrustVector;
 
         public Dictionary<string, Equipment> Equipment { get;private set; } = new Dictionary<string, Equipment>() 
         {
             {"Primary", null},
             {"Secondary", null },
         };
+
         
-        
-        public Mech(Texture2D sprite=null) : base(sprite) 
+        public Mech() : base() 
         {
             HasStats = true;
 
@@ -56,15 +56,24 @@ namespace Mechima
 
 
             this.Color = Color.White;
+
+
+            if (thrustVector.Length() == 0)
+                this.AnimData.SetAnim(AnimationState.Default);
+            else if (thrustVector.X < 0)
+                this.AnimData.SetAnim(AnimationState.MoveLeft);
+            else if (thrustVector.X > 0)
+                this.AnimData.SetAnim(AnimationState.MoveRight);
+
+            thrustVector = Vector2.Zero;
+            
         }
 
         public override void Move(Vector2 displacement)
         {
+            //DisplayManager.RequestBlit(new BlitRequest("accel: " + this.GetStat("acceleration").ToString(), Color.White, this.ScreenPosition, AnchorPoint.TopCenter, 0, 1));
+
             
-
-            if (this.GetStat("acceleration") > 150)
-                System.Diagnostics.Debug.WriteLine("fuck"); 
-
             if (this.Velocity.Length() > 0)
                 this.Velocity /= GetStat("drag");
 
@@ -85,13 +94,18 @@ namespace Mechima
 
         public void ApplyThrust(Vector2 direction)
         {
-            DisplayManager.RequestBlit(new BlitRequest(this.GetStat("acceleration").ToString(), Color.White, this.ScreenPosition));
+            
 
             Vector2 force = GetStat("acceleration") * direction * GameManager.lastTick;
+            thrustVector += force;
+
+            
 
             this.Velocity = this.Velocity + force;
             if(this.Velocity.Length() > GetStat("maxThrust")) 
                 NormalizeToMagnitude(Velocity, GetStat("maxThrust"));
+
+            
         }
 
 
