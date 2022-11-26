@@ -22,6 +22,7 @@ namespace Mechima
         
         public Mech() : base() 
         {
+            Scale = new Vector2(2f, 2f);
 
             this.ActionMap = new Dictionary<ActionType, Action>()
             {

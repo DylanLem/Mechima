@@ -28,7 +28,7 @@ namespace Mechima
 
         public static readonly List<string> spritePaths = new List<string>()
         {
-            "player_new", "headsheet","crosshair","sword","knight-sheet"
+            "player_new", "headsheet","crosshair","sword","knight-sheet", "testdummy"
         };
 
 

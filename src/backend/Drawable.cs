@@ -17,6 +17,8 @@ namespace Mechima
         public Texture2D Texture { get; private set; }
         protected Color Color { get; set; }
 
+        public Vector2 Scale { get; set; } = Vector2.One;
+
         protected float Rotation { get; set; }
         protected bool Enabled { get; set; }
         public bool IsAnimated { get; set; }
@@ -57,7 +59,7 @@ namespace Mechima
         {
             if (!Enabled) return;
             
-            sb.Draw(this.Texture, this.ScreenPosition, this.SpriteCell, this.Color, Rotation, this.SpriteCell.Size.ToVector2()/2, new Vector2(2,2), SpriteEffects.None, 0);
+            sb.Draw(this.Texture, this.ScreenPosition, this.SpriteCell, this.Color, Rotation, this.SpriteCell.Size.ToVector2()/2, Scale, SpriteEffects.None, 0);
         }
 
         public void Update()

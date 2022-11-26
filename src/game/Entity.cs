@@ -26,17 +26,26 @@ namespace Mechima
      *      
      *      
      */
-    public abstract class Entity : Drawable
+
+    public abstract class Entity : Drawable, ICollidable
     {
         public Vector2 WorldPosition { get; set; }
         public Vector2 Velocity { get; set; }
+
+        public List<ICollidable> CollidedObjects { get; set; } = new List<ICollidable>();
+
+        public Circle Collider { get; set; } = new Circle();
 
 
         public virtual void Update(GameTime gameTime)
         { 
             if (Texture == null)
                 Enabled = false;
-            
+
+            if(Enabled)
+                this.Collider.Radius = this.Texture.Width * this.Scale.X * 0.95f;
+            this.Collider.Position = this.WorldPosition;
+
             if (this.Velocity.Length() > 0) Move(this.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 
         }

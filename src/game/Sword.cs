@@ -18,7 +18,10 @@ namespace Mechima
         private float swingRange; //angular distance in radians
         private float swingOffset = 0f; //the current angular offset due to swing animation
         private float angleOffset;
-        private float orbitDistance;
+
+        
+        private float distanceOffset = 15f;
+        private float orbitDistance { get => distanceOffset + (this.Scale.Y * (float)this.Texture?.Height); }
         private float lookSpeed;
 
         private float swingTime;
@@ -29,21 +32,21 @@ namespace Mechima
 
         private Vector2 orbitVector { get => GameManager.MakeVector(Rotation, orbitDistance); }
         
-        public Sword() : base()
+        public Sword()
         {
+            Scale = new Vector2(2, 2);
             this.swingTime = 3.0f;
             this.coolDown = 1.0f;
             swingRange =  1 * MathF.PI ;
             angleOffset = -MathF.PI / 2;
-            this.orbitDistance = 45f;
+            
             this.lookSpeed = 0.15f;
         }
 
         public override void Update(GameTime gameTime)
         {
-            
 
-            if(Parent != null)
+            if (Parent != null)
             {
                 
 
@@ -66,8 +69,8 @@ namespace Mechima
                     currentState = State.UnSwinging;
                     this.coolTimer = this.coolDown;
                 }
-                    
 
+                CheckCollisions();
                                  
             }
 
@@ -97,11 +100,32 @@ namespace Mechima
                 this.lookSpeed = 0.15f;
             }
 
-
-
-
-
             base.Update(gameTime);
+        }
+
+        public void CheckCollisions()
+        {
+            float effectiveLength = this.Scale.Y * (float)this.Texture?.Height;
+
+            foreach(ICollidable collidable in GameManager.Entities)
+            {
+                if (collidable.CollidedObjects.Contains(this) || collidable == this || collidable == Parent)
+                    continue;
+
+                float distance = Vector2.Distance(this.WorldPosition, collidable.Collider.Position);
+
+                if (distance > effectiveLength + collidable.Collider.Radius) 
+                    continue;
+
+                Vector2 displacement = this.WorldPosition - collidable.Collider.Position;
+
+                float angle = MathF.Atan2(displacement.X, -displacement.Y);
+
+                if(MathF.Abs(angle - this.Rotation) < 1)
+                {
+                    System.Diagnostics.Debug.WriteLine("AHAHHAHAH");
+                }
+            }
         }
 
         public override void Activate()

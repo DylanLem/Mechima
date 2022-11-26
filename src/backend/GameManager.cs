@@ -56,8 +56,10 @@ namespace Mechima
             _player.controlledEntity = mech;
             _player.controlledEntity.WorldPosition = new Vector2(0, 0);
             _player.controlledEntity.CellSize = new Vector2(8,8);
-           
 
+            TestDummy dummy = (TestDummy)AddEntity(new TestDummy());
+            dummy.SetSprite("testdummy");
+            dummy.WorldPosition = new Vector2(400,400);
         }
 
 
@@ -68,7 +70,7 @@ namespace Mechima
             if(lastTick > 0)
                 DisplayManager.RequestBlit(new BlitRequest("fps: " + ((float)(1/lastTick)).ToString(), Color.White, Vector2.Zero, AnchorPoint.TopLeft));
 
-            effectTimer += lastTick;
+            
             pauseTimer += lastTick;
 
 
@@ -90,8 +92,6 @@ namespace Mechima
 
             _player.Update();
 
-            if (effectTimer >= effectTime)
-                effectTimer = 0;
            
         }
 

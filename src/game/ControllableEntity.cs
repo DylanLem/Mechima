@@ -9,7 +9,7 @@ namespace Mechima
     {
         Primary, Secondary, Action01, Action02, Action03, Action04, MoveUp, MoveDown, MoveRight, MoveLeft
     }
-    public abstract class ControllableEntity: Entity, IHasStats, ICollidable
+    public abstract class ControllableEntity: Entity, IHasStats
     {
 
         public Dictionary<string, float> Stats { get; set; } = new Dictionary<string, float>();
@@ -57,7 +57,7 @@ namespace Mechima
         public override void Update(GameTime gameTime)
         {
             this.Modifiers.Clear();
-            InvokeQueuedActions(); //sussy way of referencing default method in IControllable
+            InvokeQueuedActions();
             base.Update(gameTime);
 
         }
