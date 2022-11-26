@@ -64,7 +64,9 @@ namespace Mechima
         public static void Update(GameTime gameTime)
         {
             lastTick = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            DisplayManager.RequestBlit(new BlitRequest(lastTick.ToString(), Color.White, Vector2.Zero, AnchorPoint.TopLeft));
+
+            if(lastTick > 0)
+                DisplayManager.RequestBlit(new BlitRequest("fps: " + ((float)(1/lastTick)).ToString(), Color.White, Vector2.Zero, AnchorPoint.TopLeft));
 
             effectTimer += lastTick;
             pauseTimer += lastTick;

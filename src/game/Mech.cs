@@ -6,14 +6,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
-    public class Mech : ControllableEntity, IHasStats
+    public class Mech : ControllableEntity
     {
 
         private Vector2 thrustVector;
 
 
-        public Dictionary<string, float> Stats { get; set; } = new Dictionary<string, float>();
-        public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
+       
         public Dictionary<string, Equipment> Equipment { get;private set; } = new Dictionary<string, Equipment>() 
         {
             {"Primary", null},
@@ -23,18 +22,6 @@ namespace Mechima
         
         public Mech() : base() 
         {
-            
-
-            Stats  = new Dictionary<string, float>()
-            {
-                {"health",0 },
-                { "maxThrust", 100},
-                { "acceleration", 100 },
-                { "stamina", 5},
-                { "drag", 1.005f },
-                { "stoppingPower", 1.15f }
-            };
-
 
             this.ActionMap = new Dictionary<ActionType, Action>()
             {
@@ -46,16 +33,26 @@ namespace Mechima
                 {ActionType.Secondary, () => this.Airbrake() }      
             };
 
+            Stats = new Dictionary<string, float>()
+            {
+                {"health",0 },
+                { "maxThrust", 100},
+                { "acceleration", 100 },
+                { "stamina", 5},
+                { "drag", 1.005f },
+                { "stoppingPower", 1.15f }
+            };
+
         }
 
 
         public override void Update(GameTime gameTime)
         {
-
-
-            DisplayManager.RequestBlit(new BlitRequest("accel: " + ((IHasStats)this).GetStat("acceleration").ToString(), Color.White, this.ScreenPosition, AnchorPoint.TopCenter, 0, 1));
-
             base.Update(gameTime);
+
+           
+
+            
 
 
             this.Color = Color.White;
@@ -69,6 +66,7 @@ namespace Mechima
                 this.AnimData.SetAnim(AnimationState.MoveRight);
 
             thrustVector = Vector2.Zero;
+            DisplayManager.RequestBlit(new BlitRequest("accel: " + ((IHasStats)this).GetStat("acceleration").ToString(), Color.White, this.ScreenPosition, AnchorPoint.Center, 0, 1));
             
         }
 

@@ -5,9 +5,20 @@ using System.Text;
 
 namespace Mechima
 {
-    public abstract class ControllableEntity: Entity, IControllable
+    public enum ActionType
     {
-        public Dictionary<ActionType, Action> ActionMap { get; set; }
+        Primary, Secondary, Action01, Action02, Action03, Action04, MoveUp, MoveDown, MoveRight, MoveLeft
+    }
+    public abstract class ControllableEntity: Entity, IHasStats, ICollidable
+    {
+
+        public Dictionary<string, float> Stats { get; set; } = new Dictionary<string, float>();
+        public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
+
+
+
+
+        public virtual Dictionary<ActionType, Action> ActionMap { get; set; }
 
         public List<ActionType> QueuedActions { get; set; } = new List<ActionType>();
 
@@ -41,13 +52,12 @@ namespace Mechima
             this.QueuedActions.Clear();
         }
 
+
+
         public override void Update(GameTime gameTime)
         {
+            this.Modifiers.Clear();
             InvokeQueuedActions(); //sussy way of referencing default method in IControllable
-
-
-
-
             base.Update(gameTime);
 
         }

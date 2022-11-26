@@ -14,6 +14,8 @@ namespace Mechima
 
         private ControlScheme controls = new ControlScheme();
 
+        public bool AllowControl = true;
+
         public Player()
         {
             cursor = DisplayManager.spriteMap["crosshair"];
@@ -37,13 +39,12 @@ namespace Mechima
         {
             List<ActionType> inputActions = controls.GetActions();
 
-            inputActions.Sort();
+            inputActions.Sort(); //unfortunately i have to sort this list because of stupid things like moving before an action that modifies movespeed is invoked
 
-            foreach (ActionType action in inputActions)
-            {
+            if(AllowControl)
+                foreach (ActionType action in inputActions)
+                    controlledEntity.QueueAction(action);
                 
-                controlledEntity.QueueAction(action);
-            }
             
         }
     }

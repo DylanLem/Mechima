@@ -30,6 +30,7 @@ namespace Mechima
             Sprite = null;
             ScreenPosition = _screenPosition ;
             Origin = DisplayManager.GetAnchorVector(DisplayManager.defaultFont.MeasureString(Message), anchor);
+            
             Rotation = _rotation;
             Scale = _scale;
         }
