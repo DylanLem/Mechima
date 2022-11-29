@@ -20,7 +20,7 @@ namespace Mechima
         public Vector2 Scale { get; set; } = Vector2.One;
 
         protected float Rotation { get; set; }
-        protected bool Enabled { get; set; }
+        protected bool IsDrawn { get; set; } = false;
         public bool IsAnimated { get; set; }
         public AnimData AnimData { get; set; }
         public int animSpeed { get; set; }
@@ -35,7 +35,7 @@ namespace Mechima
 
 
         //calculates the rectangular slice of the texture in current animation frame
-        protected Rectangle SpriteCell { get => AnimData != null ? AnimData.SpriteCell : this.Texture.Bounds; }
+        public Rectangle SpriteCell { get => AnimData != null ? AnimData.SpriteCell : this.Texture.Bounds; }
         public Vector2 CellSize { get; set; } //this value can change depending on the resolution of each spritesheet. Must be set externally
 
 
@@ -47,7 +47,6 @@ namespace Mechima
 
             
             IsAnimated = false;
-            Enabled = true;
             Color = Color.White;
             
         }
@@ -57,14 +56,14 @@ namespace Mechima
         //Might have to refactor this if somehow the animation cycling is inefficient during draw calls.
         public void Draw(SpriteBatch sb)
         {
-            if (!Enabled) return;
+            if (!IsDrawn) return;
             
             sb.Draw(this.Texture, this.ScreenPosition, this.SpriteCell, this.Color, Rotation, this.SpriteCell.Size.ToVector2()/2, Scale, SpriteEffects.None, 0);
         }
 
         public void Update()
         {
-            if (!Enabled) return;
+            if (!IsDrawn) return;
 
             if (this.AnimData != null) AnimData.Animate();
         }
@@ -76,8 +75,10 @@ namespace Mechima
             this.Texture = sprite != null ? DisplayManager.spriteMap[sprite] : DisplayManager.spriteMap["player_new"];
             this.IsAnimated = animated;
 
-            this.AnimData = DisplayManager.GetAnim(sprite);
+            if(animated)
+                this.AnimData = DisplayManager.GetAnim(sprite);
 
+            IsDrawn = true;
         }
 
 

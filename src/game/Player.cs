@@ -39,11 +39,15 @@ namespace Mechima
         {
             List<ActionType> inputActions = controls.GetActions();
 
-            inputActions.Sort(); //unfortunately i have to sort this list because of stupid things like moving before an action that modifies movespeed is invoked
+            //inputActions.Sort(); //unfortunately i have to sort this list because of stupid things like moving before an action that modifies movespeed is invoked
 
-            if(AllowControl)
+            if(AllowControl && controlledEntity != null)
+            {
+                controlledEntity.TargetPoint = Mouse.GetState().Position.ToVector2();
                 foreach (ActionType action in inputActions)
                     controlledEntity.QueueAction(action);
+            }
+                
                 
             
         }

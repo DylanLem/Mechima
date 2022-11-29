@@ -23,8 +23,6 @@ namespace Mechima
         public static float pauseTimer = 0;
         public static float pauseCool = 1f;
 
-        public static float effectTime { get => lastTick * 1.1f; }
-        public static float effectTimer { get; set; } = 0f;
 
         public static void Initialize()
         {
@@ -37,7 +35,7 @@ namespace Mechima
 
             Cameras.Add(new Camera());
 
-            MainCam.ScreenDimensions = new Rectangle(0, 0, (int)DisplayManager.Resolution.X, (int)DisplayManager.Resolution.Y);
+            MainCam.ScreenDimensions = new Rectangle(0, 0, (int)DisplayManager.Resolution.X / 2, (int)DisplayManager.Resolution.Y/2) ;
             MainCam.Viewport = new Rectangle(0, 0, 250, 150);
 
 
@@ -47,15 +45,17 @@ namespace Mechima
             Sword sword = (Sword)AddEntity(new Sword());
             sword.SetSprite("sword");
 
-            Mech mech = (Mech)AddEntity(new Mech());
+            Thruster thruster = (Thruster)AddEntity(new Thruster()); 
+
+            Creature mech = (Creature)AddEntity(new Creature());
             mech.SetSprite("knight-sheet", true);
 
             mech.EquipItem(sword,"Primary");
-
+            mech.EquipItem(thruster, "Propulsion");
 
             _player.controlledEntity = mech;
             _player.controlledEntity.WorldPosition = new Vector2(0, 0);
-            _player.controlledEntity.CellSize = new Vector2(8,8);
+            
 
             TestDummy dummy = (TestDummy)AddEntity(new TestDummy());
             dummy.SetSprite("testdummy");
@@ -96,7 +96,16 @@ namespace Mechima
         }
 
 
+        public static List<ICollidable> GetCollidables()
+        {
+            List<ICollidable> collidables = new List<ICollidable>();
 
+            foreach (Entity e in Entities)
+                if (e is ICollidable collidable)
+                    collidables.Add(collidable);
+
+            return collidables;
+        }
 
         public static void Quit()
         {
@@ -124,12 +133,12 @@ namespace Mechima
         }
 
         //Gets the angle in radians with 0 radians being directly upwards on screen.
-        public static float GetAngleFromMouse(Vector2 point)
+        public static float GetAngleFromMouse(this Vector2 point)
         {
             Vector2 displacement = Mouse.GetState().Position.ToVector2() - point;
 
 
-            return MathF.Atan2(displacement.X, -displacement.Y) ;
+            return MathF.Atan2(displacement.Y, displacement.X) ;
         }
 
 
@@ -150,5 +159,11 @@ namespace Mechima
 
             return MathF.Atan2(S,C);
         }
+
+        public static Vector2 NormalizeToMagnitude(this Vector2 vector, float magnitude)
+        {
+            return Vector2.Normalize(vector) * magnitude;
+        }
+
     }
 }

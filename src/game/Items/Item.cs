@@ -7,14 +7,10 @@ namespace Mechima
 {
     public abstract class Item: Entity
     {
-        public string Name { get; private set; }
-        public int PowerCost { get; private set; }
-        public int Rarity { get; private set; }
 
-
-
-        public Entity Parent;
-        public bool IsAnchored { get; set; }
+        public ControllableEntity Parent;
+        public bool IsAnchored;
+        
 
 
         public override void Update(GameTime gameTime)
@@ -24,12 +20,9 @@ namespace Mechima
                 base.Update(gameTime);
         }
 
-        public virtual void Activate()
-        {
+        
 
-        }
-
-        public void SetParent(Entity e, bool anchored = false)
+        public  virtual void SetParent(ControllableEntity e, bool anchored = false)
         {
             this.Parent = e;
             this.IsAnchored = anchored;

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
-    public struct BlitRequest
+    public class BlitRequest
     {
 
         public string RequestType { get { return type; } set { type = value != "sprite" && value != "string" ? null : value; } }
@@ -35,7 +35,7 @@ namespace Mechima
             Scale = _scale;
         }
 
-        public BlitRequest(string _type, Texture2D _sprite, Color _color, Vector2 _screenPosition, AnchorPoint anchor, float _rotation = 0, float _scale = 1)
+        public BlitRequest(Texture2D _sprite, Color _color, Vector2 _screenPosition, AnchorPoint anchor, float _rotation = 0, float _scale = 1)
         {
             type = "sprite";
             Message = null;

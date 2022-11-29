@@ -9,20 +9,18 @@ namespace Mechima
     {
         Primary, Secondary, Action01, Action02, Action03, Action04, MoveUp, MoveDown, MoveRight, MoveLeft
     }
-    public abstract class ControllableEntity: Entity, IHasStats
+
+
+    public abstract class ControllableEntity: Entity
     {
 
-        public Dictionary<string, float> Stats { get; set; } = new Dictionary<string, float>();
-        public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
-
-
-
-
         public virtual Dictionary<ActionType, Action> ActionMap { get; set; }
-
         public List<ActionType> QueuedActions { get; set; } = new List<ActionType>();
 
         public bool isControlled { get; set; }
+
+        public Vector2 TargetPoint { get; set; }
+
 
         public void SetControl(ActionType actionType, Action mappedAction)
         {
@@ -47,19 +45,18 @@ namespace Mechima
         {
             foreach (ActionType action in QueuedActions)
             {
-                this.ActionMap[action].Invoke();
+                if(this.ActionMap[action] != null)
+                    this.ActionMap[action].Invoke();
             }
             this.QueuedActions.Clear();
         }
 
-
+        
 
         public override void Update(GameTime gameTime)
         {
-            this.Modifiers.Clear();
             InvokeQueuedActions();
             base.Update(gameTime);
-
         }
 
     }

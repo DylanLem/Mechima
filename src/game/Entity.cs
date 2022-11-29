@@ -7,47 +7,52 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
-    /*
-     * ##This might need retooling##
-     * 
-     * Entity: Base class for all game objects that behave with some sort of logic
-     * 
-     * Encapsulates items, mobs, etc
-     * 
-     * Things that ARENT entities: 
-     *      -Hitboxes
-     *      -Effects
-     *      -UI
-     *      -Walls
-     *      -etc.
-     * 
-     * Issues:
-     *      
-     *      
-     *      
-     */
 
-    public abstract class Entity : Drawable, ICollidable
+    public abstract class Entity : Drawable
     {
         public Vector2 WorldPosition { get; set; }
         public Vector2 Velocity { get; set; }
+        public Vector2 ForceVector { get; set; } = Vector2.Zero;
 
-        public List<ICollidable> CollidedObjects { get; set; } = new List<ICollidable>();
+        protected Dictionary<string, float> Attributes { get; set; } = new Dictionary<string, float>();
+        public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
 
-        public Circle Collider { get; set; } = new Circle();
 
+        //Entities may be indexed for their stats and attributes
+        public float this[string key]
+        {
+            get { return CalculateStat(key); }
+            set { Attributes[key] = value; }
+        }
+
+        private float CalculateStat(string name)
+        {
+            Modifiers.TryGetValue(name, out float modval);
+            Attributes.TryGetValue(name, out float statval);
+            modval += statval;
+            return modval;
+        }
+
+        public void AddModifier(string name, float value)
+        {
+            if (Modifiers.ContainsKey(name))
+                Modifiers[name] += value;
+            else
+                Modifiers[name] = value;
+        }
 
         public virtual void Update(GameTime gameTime)
-        { 
+        {
             if (Texture == null)
-                Enabled = false;
+                IsDrawn = false;
 
-            if(Enabled)
-                this.Collider.Radius = this.Texture.Width * this.Scale.X * 0.95f;
-            this.Collider.Position = this.WorldPosition;
+            this.Velocity += ForceVector;
 
             if (this.Velocity.Length() > 0) Move(this.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                
+
+            ForceVector = Vector2.Zero;
+
+            this.Modifiers.Clear();
         }
 
 
@@ -63,8 +68,6 @@ namespace Mechima
             this.ScreenPosition =  this.WorldPosition - GameManager.MainCam.WorldPosition;
             
         }
-
-
         
 
 

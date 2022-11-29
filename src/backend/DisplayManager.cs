@@ -48,9 +48,12 @@ namespace Mechima
         public static void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp,null, null, null, null);
-
+            
             foreach(Drawable drawable in Drawables)
+            {
                 drawable.Draw(spriteBatch);
+            }
+                
 
             foreach(BlitRequest request in stringBlitQueue)
                 spriteBatch.DrawString(defaultFont, request.Message, request.ScreenPosition, request.Color, request.Rotation, request.Origin, request.Scale, SpriteEffects.None, 1f);
