@@ -47,7 +47,7 @@ namespace Mechima
 
 
             Bow sword = (Bow)AddEntity(new Bow());
-            sword.SetSprite("bowey");
+            sword.SetSprite("bow-sheet",true);
 
             Thruster thruster = (Thruster)AddEntity(new Thruster()); 
 

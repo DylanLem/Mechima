@@ -13,7 +13,7 @@ namespace Mechima
         public bool IsAnchored;
         
 
-        public float orbitDistance { get => distanceOffset + (this.Scale.Y * (float)this.Texture?.Height); }
+        public float orbitDistance { get => distanceOffset + (this.Scale.Y * (float)this.SpriteCell.Height); }
         public Vector2 orbitVector { get => GameManager.MakeVector(Rotation , orbitDistance); }
         public float distanceOffset = 15f;
         public float angleOffset = 0f;

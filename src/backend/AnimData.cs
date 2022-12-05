@@ -6,10 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
-    public enum AnimationState
-    {
-        Default, Idle, Attack, MoveUp, MoveDown, MoveLeft, MoveRight, Dying, Hurt
-    }
+    
 
     
     public class AnimData: ICloneable
@@ -18,11 +15,11 @@ namespace Mechima
         protected int TextureIndex { get; set; }
 
         //Name of animation and list of texture indices for frames
-        protected Dictionary<AnimationState, List<int>> Animations { get; set; } = new Dictionary<AnimationState, List<int>>();
+        public Dictionary<AnimationState, List<int>> Animations { get; set; } = new Dictionary<AnimationState, List<int>>();
 
 
         //name and index of current frame in animation (the index corresponds to which frame it is on within the animation, not its spritesheet location)
-        protected KeyValuePair<AnimationState, int> CurrentFrame
+        public KeyValuePair<AnimationState, int> CurrentFrame
         {
             get { return _currentFrame; }
             set
@@ -36,7 +33,7 @@ namespace Mechima
 
         public float animSpeed { get; set; }
         public float defaultAnimSpeed { get; set; }
-        private double animTimer { get; set; }
+        public double animTimer { get; set; }
 
         public Vector2 CellSize { get; set; } //this value can change depending on the resolution of each spritesheet. Must be set externally
 

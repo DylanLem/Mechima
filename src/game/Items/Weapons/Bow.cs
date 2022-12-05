@@ -33,7 +33,7 @@ namespace Mechima
             
             
 
-            Scale = Vector2.One * 3;
+            Scale = Vector2.One *2;
             this["coolDown"] = 1.0f;
             this["damage"] = 10;
             this["maxCharge"] = 3;
@@ -58,13 +58,16 @@ namespace Mechima
                     coolTimer = 0;
                     CurrentState = State.Ready;
                     this.Color = Color.White;
+                    this.AnimData.SetAnim(AnimationState.Default);
                 }
             }
 
             if (CurrentState == State.Active)
             {
                 Vector2 laserLine = GameManager.MakeVector(this.Rotation, 1350);
-               
+                if (this.AnimData.CurrentFrame.Value == this.AnimData.Animations[this.AnimData.CurrentFrame.Key][this.AnimData.Animations[this.AnimData.CurrentFrame.Key].Count - 1])
+                    this.AnimData.animTimer = 0;
+
                 Graphics.MakeLinePrimitive(Color.Red*0.1f, this.WorldPosition + (laserLine / 2), Rotation, new Vector2(1,laserLine.Length()));
 
                 projectile.Rotation = this.Rotation;
@@ -73,7 +76,7 @@ namespace Mechima
                 {
                     this["currentCharge"] += GameManager.lastTick * this["chargeSpeed"];
                     this.Color = new Color(0, 0, this["currentCharge"] / this["maxCharge"] - 0.01f);
-                    projectile.WorldPosition -= this.orbitVector.NormalizeToMagnitude(3) * (projectile.Texture.Height/2) * this["currentCharge"]/this["maxCharge"] ;
+                    projectile.WorldPosition -= this.orbitVector.NormalizeToMagnitude(1) * (projectile.Texture.Height/2) * this["currentCharge"]/this["maxCharge"] ;
                 }
                 else
                 {
@@ -93,9 +96,12 @@ namespace Mechima
 
             if (CurrentState != State.Ready)
                 return;
+
+            this.AnimData.SetAnim(AnimationState.Charging);
+
             Projectile proj = (Projectile)GameManager.AddEntity(new Projectile());
-            proj.SetSprite("laser");
-            proj.Scale = Vector2.One * 2;
+            proj.SetSprite("arrow");
+            proj.Scale = Vector2.One*1.5f;
             proj.WorldPosition = this.WorldPosition;
             proj.ParentEntity = this;
             proj.Owner = this.ParentCreature;
@@ -119,6 +125,8 @@ namespace Mechima
                 }
 
                 CurrentState = State.CoolDown;
+                this.AnimData.SetAnim(AnimationState.Discharging);
+
                 coolTimer = this["coolDown"];
                 this["currentCharge"] = 0;
                 

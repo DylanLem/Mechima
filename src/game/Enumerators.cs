@@ -18,4 +18,9 @@ namespace Mechima
     {
         Move, Attack
     }
+
+    public enum AnimationState
+    {
+        Default, Idle, Attack, MoveUp, MoveDown, MoveLeft, MoveRight, Dying, Hurt, Charging, Discharging
+    }
 }
