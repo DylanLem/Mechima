@@ -6,7 +6,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
-    public class Creature : ControllableEntity, ICollidable
+    /// <summary>
+    /// Main class for any controllable entitiy that can be equipped with abilities
+    /// In-game creatures/monsters/playable characters will all be instances of Creature
+    /// 
+    /// A creature with no abilities will be capable of nothing
+    /// 
+    /// 
+    /// at the moment there are no non-Creature ControllableEntity classes, but the possibility exists.
+    /// </summary>
+    public sealed class Creature : ControllableEntity, ICollidable
     {
         public List<Item> Items = new List<Item>();
 
@@ -20,8 +29,6 @@ namespace Mechima
                 Radius = (Scale.X * (float)this.SpriteCell.Width / 2)
             };
         }
-
-
 
 
     public Creature() 

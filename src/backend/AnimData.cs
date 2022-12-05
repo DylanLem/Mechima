@@ -8,7 +8,8 @@ namespace Mechima
 {
     
 
-    
+    //Holds metadata attached to a given spritesheet wrt its various animations
+    //Prone to rework
     public class AnimData: ICloneable
     {
         //index location on the sheet

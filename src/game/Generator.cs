@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Mechima
 {
+    /// <summary>
+    /// Builds game objects such as creatures or items
+    /// </summary>
     public static class Generator
     {
 
@@ -23,7 +26,7 @@ namespace Mechima
             if (isEnemy)
                 brain.Target = GameManager._player.controlledEntity;
 
-            vessel.TargetPosition = (() => brain.Target.GetPosition());
+            vessel.TargetPosition = (() => brain.Target.WorldPosition);
 
             brain.GenerateGoal(goal);
 

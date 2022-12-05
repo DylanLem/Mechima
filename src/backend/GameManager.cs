@@ -6,6 +6,16 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Mechima
 {
+    /// <summary>
+    /// Processes the entirety of the game logic. I may have to split this manager up into a few pieces
+    /// 
+    /// todo:
+    ///     refactor GameManager into:
+    ///         SceneManager
+    ///         EntityManager
+    ///         MenuManager
+    ///         NPCManager
+    /// </summary>
     public static class GameManager
     {
         public static List<Camera> Cameras = new List<Camera>();
@@ -45,6 +55,8 @@ namespace Mechima
 
             DisplayManager.SetScreenResolution((int)DisplayManager.Resolution.X, (int)DisplayManager.Resolution.Y);
 
+            
+            // The rest of this region is just me initializing game stuff. Eventually this will be possible through dev console / menus.
 
             Bow sword = (Bow)AddEntity(new Bow());
             sword.SetSprite("bow-sheet",true);
@@ -65,19 +77,21 @@ namespace Mechima
             Random rand = new Random();
             for(int i=0; i<15; i++)
             {
-                Thruster t = (Thruster)AddEntity(new Thruster());
-                t["acceleration"] = 50f;
+                //Thruster t = (Thruster)AddEntity(new Thruster());
+                //t["acceleration"] = 50f;
                 Sword s = (Sword)AddEntity(new Sword());
                 s.SetSprite("sword");
                 List<Item> items = new List<Item>()
             {
-             s,t
+             s
             };
 
 
 
                 NPCBrain brain = Generator.CreateNPC("headsheet", items, "kill", true);
                 brain.Vessel.WorldPosition = new Vector2(rand.Next(200,1000), rand.Next(200,600));
+
+                //Init over
             }
         }
 

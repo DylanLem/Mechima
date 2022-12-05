@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Mechima
 {
+    /// <summary>
+    /// Container for various extension methods
+    /// </summary>
     public static class Extensions
     {
         //Gets the angle in radians with 0 radians being directly upwards on screen.

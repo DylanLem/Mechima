@@ -11,6 +11,9 @@ namespace Mechima
     }
 
 
+    /// <summary>
+    /// Prototype for any entity that can be controlled either by players or NPC logic.
+    /// </summary>
     public abstract class ControllableEntity: Entity
     {
 

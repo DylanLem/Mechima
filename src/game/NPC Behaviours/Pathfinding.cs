@@ -8,6 +8,7 @@ namespace Mechima
     {
 
         //Returns a normalized directional vector, checking for collideable obstacles in the way
+        //Inefficient raycast sorta method prone to rework
         public static Vector2 SimpleFollow(this NPCBrain npc, Vector2 startPosition, Vector2 goal)
         {
             Vector2 direction = goal - startPosition;

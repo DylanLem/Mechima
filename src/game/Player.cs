@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Mechima
 {
+    /// <summary>
+    /// Tracks meta-information connecting player to their character in-game. Players pair to a ControllableEntity, as well as a ControlScheme.
+    /// </summary>
     public class Player
     {
         public ControllableEntity controlledEntity;

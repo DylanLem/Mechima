@@ -6,15 +6,20 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
-    public enum AnchorPoint { TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight}
+    
     
 
-    /*
-     * Curse ye, all who enter here
-     */
+    /// <summary>
+    /// Prototype class for ANY object that gets rendered to the screen in game.
+    /// Base class for Entity
+    /// </summary>
     public abstract class Drawable
     {
-        public Texture2D Texture { get;  set; }
+        
+        public Texture2D Texture { get =>  _texture; set => SetSprite(value); }
+        private Texture2D _texture { get; set; }
+
+
         public Color Color { get; set; }
 
         public Vector2 Scale { get; set; } = Vector2.One;
@@ -23,16 +28,13 @@ namespace Mechima
         protected bool IsDrawn { get; set; } = false;
         public bool IsAnimated { get; set; }
         public AnimData AnimData { get; set; }
-        public int animSpeed { get; set; }
-        private double animTimer { get; set; }
 
-        //true if the animation cell intersects with the camera anywhere on screen
+
+        //true if the animation cell intersects with the camera anywhere on screen. Not yet utilized
         public bool IsOnScreen
             { get => (GameManager.MainCam.ScreenDimensions.Intersects(new Rectangle((int)this.ScreenPosition.X, (int)this.ScreenPosition.Y, (int)this.CellSize.X, (int)this.CellSize.Y))); }
         
         public Vector2 ScreenPosition { get; set; }
-
-
 
         //calculates the rectangular slice of the texture in current animation frame
         public Rectangle SpriteCell { get => AnimData != null ? AnimData.SpriteCell : this.Texture.Bounds; }
@@ -43,9 +45,7 @@ namespace Mechima
         public Drawable(Texture2D sprite=null)
         {
             DisplayManager.AddSprite(this);
-
-
-            
+         
             IsAnimated = false;
             Color = Color.White;
             
@@ -53,7 +53,7 @@ namespace Mechima
 
 
 
-        //Might have to refactor this if somehow the animation cycling is inefficient during draw calls.
+
         public void Draw(SpriteBatch sb)
         {
             if (!IsDrawn) return;
@@ -73,7 +73,7 @@ namespace Mechima
 
         public void SetSprite(string sprite, bool animated = false)
         {
-            this.Texture = sprite != null ? DisplayManager.spriteMap[sprite] : DisplayManager.spriteMap["player_new"];
+            this._texture = sprite != null ? DisplayManager.spriteMap[sprite] : DisplayManager.spriteMap["player_new"];
             this.IsAnimated = animated;
 
             
@@ -82,11 +82,18 @@ namespace Mechima
             IsDrawn = true;
         }
 
-
-        public virtual void DetermineScreenPosition()
+        //Use this overload to attach primitives that aren't loaded by the content manager.
+        public void SetSprite(Texture2D sprite, bool animated = false)
         {
-           
+            this._texture = sprite;
+
+            this.IsAnimated = animated;
+
+            IsDrawn = true;
         }
+
+        public virtual void DetermineScreenPosition() { }
+
 
         public void DeleteDrawable()
         {

@@ -8,8 +8,10 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
+    //Whatever can't be loaded by monogame's content pipeline will be loaded here.
     public static class ContentLoader
     {
+        //This fantastic deserializer reads my .anim file types and converts them to AnimData objects
         public static AnimData LoadAnimation(string spriteName)
         {
             string path = Directory.GetCurrentDirectory() + "\\Content\\anims\\" +  spriteName + ".anim";

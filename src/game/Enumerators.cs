@@ -23,4 +23,9 @@ namespace Mechima
     {
         Default, Idle, Attack, MoveUp, MoveDown, MoveLeft, MoveRight, Dying, Hurt, Charging, Discharging
     }
+
+    public enum AnchorPoint 
+    {
+        TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight 
+    }
 }

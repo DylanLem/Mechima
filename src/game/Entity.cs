@@ -7,17 +7,24 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
-
+    /// <summary>
+    /// The main prototype for any class that intends to "exist" within the game and operate as a world object.
+    /// </summary>
     public abstract class Entity : Drawable
     {
         public Vector2 WorldPosition { get; set; } = Vector2.Zero;
         public Vector2 Velocity { get; set; } = Vector2.Zero;
-        public Vector2 ForceVector { get; set; } = Vector2.Zero;
+        public Vector2 ForceVector { get; set; } = Vector2.Zero; //This might be reworked but something similar will be used.
 
+
+
+        //Entities can have various attributes and can be indexed entity[x] where x=string. This is going to be redone in favor of a proper attribute system.
         protected Dictionary<string, float> Attributes { get; set; } = new Dictionary<string, float>();
         public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
 
-        public Entity ParentEntity;
+
+        //Entities may or may not have a referencable parent.
+        public Entity ParentEntity { get; set; }
 
 
         //Entities may be indexed for their stats and attributes
@@ -58,12 +65,14 @@ namespace Mechima
         }
 
 
-        
+        //I play fast and loose at the moment for allowing entities to control their own movement logic. we'll see 
         public void Move(Vector2 displacement)
         {
             GameManager.TryMove(this, this.WorldPosition + displacement);
         }
 
+
+        //Technically a stub right now
         public override void DetermineScreenPosition()
         {
 
@@ -71,10 +80,7 @@ namespace Mechima
             
         }
         
-        public Vector2 GetPosition()
-        {
-            return this.WorldPosition;
-        }
+
 
 
 

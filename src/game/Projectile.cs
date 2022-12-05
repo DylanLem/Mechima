@@ -26,7 +26,7 @@ namespace Mechima
             };
         }
 
-
+        //This is garbage-ass collision rn
         public bool CheckCollision(ICollidable collidable)
         {
             if (Vector2.Distance(this.Collider.Position, collidable.Collider.Position) < this.Collider.Radius + collidable.Collider.Radius)

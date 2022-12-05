@@ -5,6 +5,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Mechima
 {
+
+    /// <summary>
+    /// Maps player input to commands understood by the game. 
+    /// 
+    /// System flow is this: 
+    /// ControlScheme {input->ActionType}
+    /// Player {ControlScheme -> ControllableEntity}
+    /// ControllableEntity {ActionType->Action}
+    /// </summary>
     public class ControlScheme
     {
         public Dictionary<Keys, ActionType> kbControlMap;
@@ -12,7 +21,8 @@ namespace Mechima
 
         private bool leftIsClicked;
 
-
+        //This can give an idea of the intention behind the data structure.
+        //Keyboard inputs map to ActionType enums. Actiontypes will correspond to programmed actions in-game
         private readonly Dictionary<Keys, ActionType> kbDefaultControls = new Dictionary<Keys, ActionType>()
         {
             {Keys.S, ActionType.MoveDown },
@@ -37,14 +47,11 @@ namespace Mechima
             this.mouseControlMap = mouseDefaultControls;
         }
 
-        private Keys[] ConvertToKeys()
-        {
-            Keys[] f = new Keys[kbControlMap.Count];
-            kbControlMap.Keys.CopyTo(f, 0);
 
-            return f;
-        }
-
+        /// <summary>
+        /// Checks the state of all inputs in the control map and creates a list of ActionType for game logic.
+        /// </summary>
+        /// <returns></returns>
         public List<ActionType> GetActions()
         {
             List<ActionType> actions = new List<ActionType>();

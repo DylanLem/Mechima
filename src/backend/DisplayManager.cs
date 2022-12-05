@@ -8,7 +8,14 @@ using Microsoft.Xna.Framework.Content;
 namespace Mechima
 {
 
-
+    /// <summary>
+    /// Dirty manager class that processes graphics related requests 
+    /// Keeps track of all drawn entities
+    /// 
+    /// todo: 
+    ///     Occlusion culling (once camera is developed)
+    ///     shader & effects management
+    /// </summary>
     public static class DisplayManager
     {
         public static Vector2 Resolution = new Vector2(1280, 720);
@@ -92,7 +99,7 @@ namespace Mechima
             QueuedDrawables.Add(drawable);
         }
 
-
+        //Blits are destroyed on the frame they are created
         public static void RequestBlit(BlitRequest request)
         {
             if (request.RequestType == null)
@@ -129,6 +136,7 @@ namespace Mechima
 
 
         //converts anchorpoint enum value to texture offset vector between 0 and 1
+        //I hate switch statements like this but i dont have a better idea for mapping these values.
         public static Vector2 GetAnchorVector(Vector2 TextureDimension, AnchorPoint anchor)
         {
             switch (anchor)

@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
+    //originally just a hacky way to draw debug data to the screen while testing
+    //probably going to be removed in favour of SpriteEffect
     public class BlitRequest
     {
 

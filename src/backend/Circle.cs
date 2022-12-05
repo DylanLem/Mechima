@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
+    /// <summary>
+    /// datatype representing a primitive circle
+    /// </summary>
     public class Circle
     {
         public float Radius;

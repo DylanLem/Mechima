@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
+    /// <summary>
+    /// WIP class for drawing sprites to the screen temporarily
+    /// </summary>
     public class SpriteEffect: Drawable
     {
         public float LifeTime { get; set; } = 0;

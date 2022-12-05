@@ -22,7 +22,7 @@ namespace Mechima
         {
             SpriteEffect d = new SpriteEffect();
 
-            d.Texture = primitivePixel;
+            d.SetSprite(primitivePixel);
             d.Rotation = angle;
             d.Scale = scale;
             d.Color = color;

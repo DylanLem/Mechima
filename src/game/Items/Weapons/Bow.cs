@@ -51,7 +51,7 @@ namespace Mechima
             if (CurrentState == State.CoolDown)
             {
                 coolTimer -= GameManager.lastTick;
-                this.Color = new Color(coolTimer/this["coolDown"], 0, 0);
+                this.Color = new Color(MathF.Max(coolTimer/this["coolDown"], 1-coolTimer / this["coolDown"]), 1 - coolTimer / this["coolDown"], 1 - coolTimer / this["coolDown"]);
                 
                 if(coolTimer <= 0)
                 {
@@ -68,28 +68,31 @@ namespace Mechima
                 if (this.AnimData.CurrentFrame.Value == this.AnimData.Animations[this.AnimData.CurrentFrame.Key][this.AnimData.Animations[this.AnimData.CurrentFrame.Key].Count - 1])
                     this.AnimData.animTimer = 0;
 
-                Graphics.MakeLinePrimitive(Color.Red*0.1f, this.WorldPosition + (laserLine / 2), Rotation, new Vector2(1,laserLine.Length()));
+                Graphics.MakeLinePrimitive(Color.Red*0.1f, this.WorldPosition + (laserLine / 2), Rotation, new Vector2(1,laserLine.Length())); //laser laser laser :) :) :)
 
                 projectile.Rotation = this.Rotation;
                 projectile.WorldPosition = this.WorldPosition;
-                if (this["currentCharge"] <= this["maxCharge"])
+                if (this["currentCharge"] < this["maxCharge"])
                 {
                     this["currentCharge"] += GameManager.lastTick * this["chargeSpeed"];
-                    this.Color = new Color(0, 0, this["currentCharge"] / this["maxCharge"] - 0.01f);
-                    projectile.WorldPosition -= this.orbitVector.NormalizeToMagnitude(1) * (projectile.Texture.Height/2) * this["currentCharge"]/this["maxCharge"] ;
+                    this.Color = new Color(1 - this["currentCharge"] / this["maxCharge"], 1, 1 - this["currentCharge"] / this["maxCharge"]);
+                    
                 }
                 else
                 {
                     this["currentCharge"] = this["maxCharge"];
                     this.Color = new Color(0, 0.99f, 0);
                 }
-
+                
+                projectile.WorldPosition -= this.orbitVector.NormalizeToMagnitude(1) * (projectile.Texture.Height / 2) * this["currentCharge"] / this["maxCharge"]; //makes the arrow pull back as u charge
                 
             }
 
             base.Update(gameTime);
         }
 
+
+        //Creates an instance of whatever projectile type the object holds and prepares it for shootin
         public void DrawArrow()
         {
             
