@@ -12,7 +12,7 @@ namespace Mechima
     }
 
     
-    public class AnimData
+    public class AnimData: ICloneable
     {
         //index location on the sheet
         protected int TextureIndex { get; set; }
@@ -31,7 +31,7 @@ namespace Mechima
                   value
                   : new KeyValuePair<AnimationState, int>(AnimationState.Default, 0);
             }
-        }
+        } 
         private KeyValuePair<AnimationState, int> _currentFrame { get; set; }
 
         public float animSpeed { get; set; }
@@ -78,6 +78,17 @@ namespace Mechima
             if (!Animations.ContainsKey(state) || _currentFrame.Key == state)
                 return;
             this.CurrentFrame = new KeyValuePair<AnimationState, int>(state,0);
+        }
+
+        public object Clone()
+        {
+            AnimData data = new AnimData();
+            data.Animations = this.Animations;
+            data.TextureSize = this.TextureSize;
+            data.animSpeed = this.animSpeed;
+            data.CellSize = this.CellSize;
+
+            return data;
         }
     }
 }

@@ -9,17 +9,18 @@ using System.Linq;
 namespace Mechima
 {
     
-    public abstract class Equipment : Item
+    public abstract class Ability : Item
     {
         public abstract Dictionary<ActionType, Action> Abilities { get; }
 
-       
+        protected enum State {Ready, Active, CoolDown}
+        protected State CurrentState { get; set; }
 
         public void Enable()
         {
-            if (Parent == null) return;
-
-            Parent.SetControl(Abilities.ToList<KeyValuePair<ActionType, Action>>());
+            if (ParentCreature == null) return;
+            
+            ParentCreature.SetControl(Abilities.ToList());
         }
     }
 }

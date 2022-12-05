@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mechima
 {
-    public class Sword : Equipment, ICollidable
+    public class Sword : Ability, ICollidable
     {
         public override Dictionary<ActionType, Action> Abilities { get =>
                 new Dictionary<ActionType, Action>() {
@@ -20,27 +20,24 @@ namespace Mechima
             set => this.Collider = value;
         }
 
-        private enum State
-        {
-            Swinging, UnSwinging, Ready
-        }
+        public override List<ItemTag> Tags { get => new List<ItemTag>() { ItemTag.Damage }; }
 
-        private State currentState = State.Ready;
+        
+
+        
 
 
 
         private float swingOffset = 0f; //the current angular offset due to swing animation
-        private float angleOffset;
+        
 
-        private float distanceOffset = 15f;
-        private float orbitDistance { get => distanceOffset + (this.Scale.Y * (float)this.Texture?.Height); }
-        private float lookSpeed;
+       
 
-        private float coolTimer;
+        
         
         
 
-        private Vector2 orbitVector { get => GameManager.MakeVector(Rotation, orbitDistance); }
+        
         
         public Sword()
         {
@@ -52,19 +49,23 @@ namespace Mechima
 
             Scale = new Vector2(2, 2);
 
-            angleOffset = 0;
+            angleOffset = -MathF.PI/2;
             
-            this.lookSpeed = 0.15f;
+            
         }
 
+       
         public override void Update(GameTime gameTime)
         {
 
-            if (Parent != null)
+            if (ParentCreature != null)
             {
-                float newRot = GameManager.lerpRotation(this.Rotation - this.angleOffset - swingOffset, Parent.ScreenPosition.GetAngleFromMouse(), this.lookSpeed);
-                this.Rotation = newRot + angleOffset + swingOffset;
-                this.WorldPosition = Parent.WorldPosition + orbitVector;
+                this.Rotation -= (angleOffset + swingOffset);
+                this.RotateFromParent();
+                this.Rotation += angleOffset + swingOffset;
+
+                this.WorldPosition = this.ParentCreature.WorldPosition + this.orbitVector;
+
             }
 
 
@@ -72,7 +73,7 @@ namespace Mechima
 
 
 
-            if (currentState == State.Swinging)
+            if (CurrentState == State.Active)
             {
                 this.lookSpeed = 0.95f;
                 this.Color = new Color(0, 0, 0.8f);
@@ -81,7 +82,7 @@ namespace Mechima
                     swingOffset += (MathF.PI * 2 * this["swingTime"]) * GameManager.lastTick;
                 else
                 {
-                    currentState = State.UnSwinging;
+                    CurrentState = State.CoolDown;
                     this.coolTimer = this["coolDown"];
                 }
 
@@ -89,12 +90,12 @@ namespace Mechima
                 {
                     if (CheckCollision(collidable))
                     {
-                        System.Diagnostics.Debug.WriteLine(CalculateDamage());
+                        
                         DisplayManager.RequestBlit(new BlitRequest("HIT!", Color.White, this.ScreenPosition + new Vector2(0, 10), AnchorPoint.TopCenter));
-                        System.Diagnostics.Debug.WriteLine("collided with: " + collidable.ToString());
+                        
                         if (collidable is Entity entity)
                         {
-                            Vector2 d = (entity.WorldPosition - Parent.WorldPosition);
+                            Vector2 d = (entity.WorldPosition - ParentCreature.WorldPosition);
                             d.Normalize();
                             entity.Move(d * 15);
                         }
@@ -104,7 +105,7 @@ namespace Mechima
             }
 
 
-            if (currentState == State.UnSwinging)
+            if (CurrentState == State.CoolDown)
             {
                 this.lookSpeed = 0.1f;
                 this.Color = new Color(0.8f, 0, 0);
@@ -120,12 +121,12 @@ namespace Mechima
                 else if(this.coolTimer <= 0)
                 {
                     swingOffset = 0;
-                    currentState = State.Ready;
+                    CurrentState = State.Ready;
                     this.Color = new Color(0, 0.8f, 0);
                 }
             }
 
-            if (currentState == State.Ready)
+            if (CurrentState == State.Ready)
             {
                 this.lookSpeed = 0.15f;
             }
@@ -135,14 +136,14 @@ namespace Mechima
 
         public bool CheckCollision(ICollidable collidable)
         {           
-            float range = orbitDistance + Parent.SpriteCell.Width/2;
+            float range = orbitDistance + ParentCreature.SpriteCell.Width/2;
 
 
-            if (collidable == this || collidable == Parent)
+            if (collidable == this || collidable == ParentCreature)
                 return false;
 
 
-            float distance = Vector2.Distance(Parent.WorldPosition, collidable.Collider.Position) - collidable.Collider.Radius;
+            float distance = Vector2.Distance(ParentCreature.WorldPosition, collidable.Collider.Position) - collidable.Collider.Radius;
 
 
 
@@ -151,7 +152,7 @@ namespace Mechima
 
                 
 
-            Vector2 displacement =  collidable.Collider.Position - Parent.WorldPosition;
+            Vector2 displacement =  collidable.Collider.Position - ParentCreature.WorldPosition;
 
                 
 
@@ -168,16 +169,16 @@ namespace Mechima
         public void Activate()
         {
             
-            if (currentState != State.Ready) return;
-            currentState = State.Swinging;
-            System.Diagnostics.Debug.WriteLine("---------------------");
+            if (CurrentState != State.Ready) return;
+            CurrentState = State.Active;
+            
         }
 
         private float CalculateDamage()
         {
-            float mouseFactor = MathF.Abs((2 * MathF.PI) / Parent.ScreenPosition.GetAngleFromMouse());
+            float mouseFactor = MathF.Abs((2 * MathF.PI) / ParentCreature.ScreenPosition.GetAngleFromMouse());
             float swingFactor = 1.2f * this.swingOffset / this["swingRange"];
-            float speedFactor = MathF.Max(Parent.Velocity.Length(),500);
+            float speedFactor = MathF.Max(ParentCreature.Velocity.Length(),500);
 
             return this["damage"] * swingFactor * MathF.Max((speedFactor / 100), 1);
 

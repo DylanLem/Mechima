@@ -14,7 +14,7 @@ namespace Mechima
         {
             string path = Directory.GetCurrentDirectory() + "\\Content\\anims\\" +  spriteName + ".anim";
 
-            System.Diagnostics.Debug.WriteLine(path);
+            
 
             if (!File.Exists(path)) return null;
 

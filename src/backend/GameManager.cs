@@ -15,7 +15,11 @@ namespace Mechima
         private static bool _initialized = false;
 
         public static Player _player;
+        public static List<NPCBrain> NPCs = new List<NPCBrain>();
+
         public static List<Entity> Entities = new List<Entity>();
+        public static List<Entity> QueuedEntities = new List<Entity>();
+        public static List<Entity> PoppedEntities = new List<Entity>();
 
         public static float lastTick = 0.01f;
 
@@ -42,30 +46,45 @@ namespace Mechima
             DisplayManager.SetScreenResolution((int)DisplayManager.Resolution.X, (int)DisplayManager.Resolution.Y);
 
 
-            Sword sword = (Sword)AddEntity(new Sword());
-            sword.SetSprite("sword");
+            Bow sword = (Bow)AddEntity(new Bow());
+            sword.SetSprite("bowey");
 
             Thruster thruster = (Thruster)AddEntity(new Thruster()); 
 
             Creature mech = (Creature)AddEntity(new Creature());
             mech.SetSprite("knight-sheet", true);
 
-            mech.EquipItem(sword,"Primary");
-            mech.EquipItem(thruster, "Propulsion");
+            mech.EquipItem(sword);
+            mech.EquipItem(thruster);
 
-            _player.controlledEntity = mech;
-            _player.controlledEntity.WorldPosition = new Vector2(0, 0);
-            
+            _player.TakeControl(mech);
+            _player.controlledEntity.WorldPosition = new Vector2(100,100);
 
-            TestDummy dummy = (TestDummy)AddEntity(new TestDummy());
-            dummy.SetSprite("testdummy");
-            dummy.WorldPosition = new Vector2(400,400);
+
+
+            Random rand = new Random();
+            for(int i=0; i<15; i++)
+            {
+                Thruster t = (Thruster)AddEntity(new Thruster());
+                t["acceleration"] = 50f;
+                Sword s = (Sword)AddEntity(new Sword());
+                s.SetSprite("sword");
+                List<Item> items = new List<Item>()
+            {
+             s,t
+            };
+
+
+
+                NPCBrain brain = Generator.CreateNPC("headsheet", items, "kill", true);
+                brain.Vessel.WorldPosition = new Vector2(rand.Next(200,1000), rand.Next(200,600));
+            }
         }
 
 
         public static void Update(GameTime gameTime)
         {
-            lastTick = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
 
             if(lastTick > 0)
                 DisplayManager.RequestBlit(new BlitRequest("fps: " + ((float)(1/lastTick)).ToString(), Color.White, Vector2.Zero, AnchorPoint.TopLeft));
@@ -86,13 +105,28 @@ namespace Mechima
 
 
 
-            
+            foreach (Entity e in PoppedEntities)
+            {
+                Entities.Remove(e);
+                
+            }
+
+
             foreach (Entity e in Entities)
                 e.Update(gameTime);
 
+            foreach (NPCBrain npc in NPCs)
+                npc.Update();
+
+
             _player.Update();
 
-           
+           foreach(Entity e in QueuedEntities)          
+                Entities.Add(e);
+            
+
+            PoppedEntities.Clear();
+            QueuedEntities.Clear();
         }
 
 
@@ -122,7 +156,7 @@ namespace Mechima
 
         public static Entity AddEntity(Entity entity)
         {
-            Entities.Add(entity);
+            QueuedEntities.Add(entity);
             return entity;
         }
 
@@ -132,14 +166,7 @@ namespace Mechima
             return true;
         }
 
-        //Gets the angle in radians with 0 radians being directly upwards on screen.
-        public static float GetAngleFromMouse(this Vector2 point)
-        {
-            Vector2 displacement = Mouse.GetState().Position.ToVector2() - point;
-
-
-            return MathF.Atan2(displacement.Y, displacement.X) ;
-        }
+        
 
 
         //Makes a vector where 0rad is directly upwards
@@ -160,10 +187,7 @@ namespace Mechima
             return MathF.Atan2(S,C);
         }
 
-        public static Vector2 NormalizeToMagnitude(this Vector2 vector, float magnitude)
-        {
-            return Vector2.Normalize(vector) * magnitude;
-        }
+        
 
     }
 }

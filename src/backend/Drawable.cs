@@ -14,12 +14,12 @@ namespace Mechima
      */
     public abstract class Drawable
     {
-        public Texture2D Texture { get; private set; }
-        protected Color Color { get; set; }
+        public Texture2D Texture { get;  set; }
+        public Color Color { get; set; }
 
         public Vector2 Scale { get; set; } = Vector2.One;
 
-        protected float Rotation { get; set; }
+        public float Rotation { get; set; }
         protected bool IsDrawn { get; set; } = false;
         public bool IsAnimated { get; set; }
         public AnimData AnimData { get; set; }
@@ -42,7 +42,7 @@ namespace Mechima
 
         public Drawable(Texture2D sprite=null)
         {
-            DisplayManager.Drawables.Add(this);
+            DisplayManager.AddSprite(this);
 
 
             
@@ -61,11 +61,12 @@ namespace Mechima
             sb.Draw(this.Texture, this.ScreenPosition, this.SpriteCell, this.Color, Rotation, this.SpriteCell.Size.ToVector2()/2, Scale, SpriteEffects.None, 0);
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            if (!IsDrawn) return;
+            if (IsAnimated && AnimData != null)
+                AnimData.Animate();
 
-            if (this.AnimData != null) AnimData.Animate();
+            DetermineScreenPosition();
         }
 
 
@@ -75,8 +76,8 @@ namespace Mechima
             this.Texture = sprite != null ? DisplayManager.spriteMap[sprite] : DisplayManager.spriteMap["player_new"];
             this.IsAnimated = animated;
 
-            if(animated)
-                this.AnimData = DisplayManager.GetAnim(sprite);
+            
+            this.AnimData = DisplayManager.GetAnim(sprite);
 
             IsDrawn = true;
         }
@@ -84,7 +85,12 @@ namespace Mechima
 
         public virtual void DetermineScreenPosition()
         {
-            System.Diagnostics.Debug.WriteLine("virtual function called in Drawable.cs. this really shouldn't be called.");
+           
+        }
+
+        public void DeleteDrawable()
+        {
+            DisplayManager.PoppedDrawables.Add(this);
         }
 
 

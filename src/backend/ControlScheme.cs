@@ -10,7 +10,7 @@ namespace Mechima
         public Dictionary<Keys, ActionType> kbControlMap;
         public Dictionary<string, ActionType> mouseControlMap;
 
-        
+        private bool leftIsClicked;
 
 
         private readonly Dictionary<Keys, ActionType> kbDefaultControls = new Dictionary<Keys, ActionType>()
@@ -27,6 +27,7 @@ namespace Mechima
         private readonly Dictionary<string, ActionType> mouseDefaultControls = new Dictionary<string, ActionType>()
         {
             {"leftClick", ActionType.Primary},
+            {"leftClickUp", ActionType.Action04 },
             {"rightClick", ActionType.Secondary}
         };
 
@@ -55,7 +56,21 @@ namespace Mechima
             MouseState mouse = Mouse.GetState();
 
             if (mouse.LeftButton == ButtonState.Pressed)
+            {
                 actions.Add(mouseControlMap["leftClick"]);
+                leftIsClicked = true;
+            }
+            else
+            {
+                if (leftIsClicked)
+                {
+                    actions.Add(mouseControlMap["leftClickUp"]);
+                    leftIsClicked = false;
+                }
+                    
+                
+            }
+                
             if (mouse.RightButton == ButtonState.Pressed)
                 actions.Add(mouseControlMap["rightClick"]);
 

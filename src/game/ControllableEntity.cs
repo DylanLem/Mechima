@@ -19,8 +19,6 @@ namespace Mechima
 
         public bool isControlled { get; set; }
 
-        public Vector2 TargetPoint { get; set; }
-
 
         public void SetControl(ActionType actionType, Action mappedAction)
         {
@@ -45,6 +43,8 @@ namespace Mechima
         {
             foreach (ActionType action in QueuedActions)
             {
+                
+                
                 if(this.ActionMap[action] != null)
                     this.ActionMap[action].Invoke();
             }

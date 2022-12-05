@@ -22,7 +22,7 @@ namespace Mechima
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
+            Graphics.Initiate(GraphicsDevice);
             base.Initialize();
         }
 
@@ -62,7 +62,7 @@ namespace Mechima
         {
             GraphicsDevice.Clear(Color.SlateGray);
 
-            
+            GameManager.lastTick = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             DisplayManager.Draw(_spriteBatch);
     

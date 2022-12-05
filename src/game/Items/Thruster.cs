@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace Mechima
 {
-    class Thruster: Equipment
+    class Thruster: Ability
     {
-        public float maxThrust = 550f;
+        public float maxThrust = 150f;
 
         public override Dictionary<ActionType, Action> Abilities
         {
@@ -20,27 +20,31 @@ namespace Mechima
         };
         }
 
+        public override List<ItemTag> Tags { get => new List<ItemTag>() { ItemTag.Movement }; }
+
         public Thruster()
         {
-            this["acceleration"] = 250.0f;
+            this["acceleration"] = 800.0f;
         }
 
         public void Activate(Vector2 direction)
         {
+            
             Vector2 force = this["acceleration"] * direction * GameManager.lastTick;
             
 
-            Vector2 expectedV = Parent.Velocity + force;
-
+            Vector2 expectedV = ParentCreature.Velocity + force;
+            
             float differential = maxThrust - expectedV.Length();
 
             if(differential < 0)
             {
                 float normalMag = force.Length() + differential;
                 force = force.NormalizeToMagnitude(normalMag);
+                
             }
 
-            Parent.ForceVector += force;
+            ParentCreature.ForceVector += force;
         }
     }
 }

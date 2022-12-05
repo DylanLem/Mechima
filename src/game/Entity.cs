@@ -10,12 +10,14 @@ namespace Mechima
 
     public abstract class Entity : Drawable
     {
-        public Vector2 WorldPosition { get; set; }
-        public Vector2 Velocity { get; set; }
+        public Vector2 WorldPosition { get; set; } = Vector2.Zero;
+        public Vector2 Velocity { get; set; } = Vector2.Zero;
         public Vector2 ForceVector { get; set; } = Vector2.Zero;
 
         protected Dictionary<string, float> Attributes { get; set; } = new Dictionary<string, float>();
         public Dictionary<string, float> Modifiers { get; set; } = new Dictionary<string, float>();
+
+        public Entity ParentEntity;
 
 
         //Entities may be indexed for their stats and attributes
@@ -69,6 +71,10 @@ namespace Mechima
             
         }
         
+        public Vector2 GetPosition()
+        {
+            return this.WorldPosition;
+        }
 
 
 

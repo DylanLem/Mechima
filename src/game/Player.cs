@@ -26,11 +26,12 @@ namespace Mechima
 
 
         //Grants the player control of a given entity
-        public void TakeControl(ControllableEntity entity)
+        public void TakeControl(Creature entity)
         {
             if (controlledEntity != null) controlledEntity.isControlled = false;
 
             entity.isControlled = true;
+            entity.TargetPosition = (() => Mouse.GetState().Position.ToVector2());
             this.controlledEntity = entity;
         }
 
@@ -43,11 +44,11 @@ namespace Mechima
 
             if(AllowControl && controlledEntity != null)
             {
-                controlledEntity.TargetPoint = Mouse.GetState().Position.ToVector2();
+                
                 foreach (ActionType action in inputActions)
                     controlledEntity.QueueAction(action);
             }
-                
+            
                 
             
         }

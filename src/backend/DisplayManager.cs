@@ -14,6 +14,11 @@ namespace Mechima
         public static Vector2 Resolution = new Vector2(1280, 720);
 
         public static List<Drawable> Drawables = new List<Drawable>();
+        public static List<Drawable> PoppedDrawables = new List<Drawable>();
+        public static List<Drawable> QueuedDrawables = new List<Drawable>();
+
+
+
         public static GraphicsDeviceManager graphicsDevice;
 
         private static List<BlitRequest> spriteBlitQueue = new List<BlitRequest>();
@@ -28,26 +33,35 @@ namespace Mechima
 
         public static readonly List<string> spritePaths = new List<string>()
         {
-            "player_new", "headsheet","crosshair","sword","knight-sheet", "testdummy"
+            "player_new", "headsheet","crosshair","sword","knight-sheet", "testdummy", "bowey", "laser"
         };
 
 
 
         public static void Update(GameTime gameTime)
         {
-            foreach(Drawable drawable in Drawables)
-            {
-                if (drawable.IsAnimated && drawable.AnimData != null)
-                    drawable.AnimData.Animate();
+            foreach (Drawable drawable in PoppedDrawables)
+                Drawables.Remove(drawable);
+            PoppedDrawables.Clear();
 
-                drawable.DetermineScreenPosition();
+
+            foreach (Drawable drawable in Drawables)
+            {
+                drawable.Update();
             }
+
+            foreach (Drawable drawable in QueuedDrawables)
+                Drawables.Add(drawable);
+            QueuedDrawables.Clear();
+
+            
         }
 
 
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp,null, null, null, null);
+           
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,null, null, null, null);
             
             foreach(Drawable drawable in Drawables)
             {
@@ -73,7 +87,10 @@ namespace Mechima
                 spriteMap[spritename] = content.Load<Texture2D>(spritename);
         }
 
-
+        public static void AddSprite(Drawable drawable)
+        {
+            QueuedDrawables.Add(drawable);
+        }
 
 
         public static void RequestBlit(BlitRequest request)
@@ -95,7 +112,9 @@ namespace Mechima
             if (!AnimationMap.ContainsKey(spriteName))
                 AnimationMap[spriteName] = ContentLoader.LoadAnimation(spriteName);
 
-            return AnimationMap[spriteName];
+           
+
+            return ((AnimData)AnimationMap[spriteName]?.Clone());
         }
 
 
