@@ -15,7 +15,7 @@ namespace Mechima
 
         private Texture2D cursor;
 
-        private ControlScheme controls = new ControlScheme();
+        public ControlScheme Controls { get; private set; } = new ControlScheme();
 
         public bool AllowControl = true;
 
