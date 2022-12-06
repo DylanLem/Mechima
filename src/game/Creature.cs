@@ -35,6 +35,8 @@ namespace Mechima
         {
             Scale = new Vector2(2f, 2f);
 
+            this["drag"] = 95.0f;
+
             this.ActionMap = new Dictionary<ActionType, Action>()
             {
                 {ActionType.MoveDown, null},

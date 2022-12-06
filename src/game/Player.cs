@@ -16,6 +16,7 @@ namespace Mechima
         private Texture2D cursor;
 
         public ControlScheme Controls { get; private set; } = new ControlScheme();
+        public List<ActionType> CurrentActions { get; set; }
 
         public bool AllowControl = true;
 
@@ -40,19 +41,13 @@ namespace Mechima
 
 
         public void Update()
-        {
-            List<ActionType> inputActions = controls.GetActions();
-
-            //inputActions.Sort(); //unfortunately i have to sort this list because of stupid things like moving before an action that modifies movespeed is invoked
-
+        {           
             if(AllowControl && controlledEntity != null)
             {
-                
+                List<ActionType> inputActions = InputManager.GetActions(Controls);
                 foreach (ActionType action in inputActions)
                     controlledEntity.QueueAction(action);
-            }
-            
-                
+            }            
             
         }
     }

@@ -34,17 +34,23 @@ namespace Mechima
             
 
             Vector2 expectedV = ParentCreature.Velocity + force;
-            
-            float differential = maxThrust - expectedV.Length();
+            Vector2 deltaV = force;
 
-            if(differential < 0)
+            //float differential = maxThrust - expectedV.Length();
+
+            if (maxThrust - expectedV.Length() < 0)
             {
-                float normalMag = force.Length() + differential;
-                force = force.NormalizeToMagnitude(normalMag);
+                Vector2 normalV = expectedV.NormalizeToMagnitude(maxThrust);
+                deltaV = normalV - expectedV;
+
+               // float normalMag = force.Length() + differential;
+                //force = force.NormalizeToMagnitude(normalMag);
                 
             }
 
-            ParentCreature.ForceVector += force;
+            ParentCreature.ForceVector += deltaV;
         }
+
+        
     }
 }

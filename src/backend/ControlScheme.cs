@@ -19,7 +19,7 @@ namespace Mechima
         public Dictionary<Keys, ActionType> kbControlMap;
         public Dictionary<string, ActionType> mouseControlMap;
 
-        private bool leftIsClicked;
+        public bool leftIsClicked;
 
         //This can give an idea of the intention behind the data structure.
         //Keyboard inputs map to ActionType enums. Actiontypes will correspond to programmed actions in-game
@@ -48,40 +48,5 @@ namespace Mechima
         }
 
 
-        /// <summary>
-        /// Checks the state of all inputs in the control map and creates a list of ActionType for game logic.
-        /// </summary>
-        /// <returns></returns>
-        public List<ActionType> GetActions()
-        {
-            List<ActionType> actions = new List<ActionType>();
-
-            foreach(Keys key in kbControlMap.Keys)
-                if (Keyboard.GetState().IsKeyDown(key))
-                    actions.Add(kbControlMap[key]);
-
-            MouseState mouse = Mouse.GetState();
-
-            if (mouse.LeftButton == ButtonState.Pressed)
-            {
-                actions.Add(mouseControlMap["leftClick"]);
-                leftIsClicked = true;
-            }
-            else
-            {
-                if (leftIsClicked)
-                {
-                    actions.Add(mouseControlMap["leftClickUp"]);
-                    leftIsClicked = false;
-                }
-                    
-                
-            }
-                
-            if (mouse.RightButton == ButtonState.Pressed)
-                actions.Add(mouseControlMap["rightClick"]);
-
-            return actions;
-        }
     }
 }
