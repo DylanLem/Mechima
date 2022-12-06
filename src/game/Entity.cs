@@ -57,7 +57,11 @@ namespace Mechima
 
             this.Velocity += ForceVector;
 
-            if (this.Velocity.Length() > 0) Move(this.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            if (this.Velocity.Length() > 0) 
+            {
+                Move((this.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                this.Velocity = (this.Velocity * (1-(this["drag"]*GameManager.lastTick)));
+            } 
 
             ForceVector = Vector2.Zero;
 

@@ -97,7 +97,7 @@ namespace Mechima
                         {
                             Vector2 d = (entity.WorldPosition - ParentCreature.WorldPosition);
                             d.Normalize();
-                            entity.Move(d * 15);
+                            entity.ForceVector += (d * 15);
                         }
 
                     }

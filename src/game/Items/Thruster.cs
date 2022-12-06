@@ -51,6 +51,12 @@ namespace Mechima
             ParentCreature.ForceVector += deltaV;
         }
 
-        
+        public override void SetParent(Creature e, bool anchored = true)
+        {
+            base.SetParent(e, anchored);
+            ParentCreature["drag"] = 0.15f;
+        }
+
+
     }
 }

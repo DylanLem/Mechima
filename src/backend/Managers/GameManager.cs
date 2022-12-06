@@ -55,19 +55,23 @@ namespace Mechima
 
             DisplayManager.SetScreenResolution((int)DisplayManager.Resolution.X, (int)DisplayManager.Resolution.Y);
 
-            
+
             // The rest of this region is just me initializing game stuff. Eventually this will be possible through dev console / menus.
 
-            Bow sword = (Bow)AddEntity(new Bow());
-            sword.SetSprite("bow-sheet",true);
+            Bow bow = (Bow)AddEntity(new Bow());
+            bow.SetSprite("bow-sheet",true);
+
+            Sword sword = (Sword)AddEntity(new Sword());
+            sword.SetSprite("sword");
 
             Thruster thruster = (Thruster)AddEntity(new Thruster()); 
 
             Creature mech = (Creature)AddEntity(new Creature());
             mech.SetSprite("knight-sheet", true);
 
-            mech.EquipItem(sword);
+            mech.EquipItem(bow);
             mech.EquipItem(thruster);
+            //mech.EquipItem(sword);
 
             _player.TakeControl(mech);
             _player.controlledEntity.WorldPosition = new Vector2(100,100);

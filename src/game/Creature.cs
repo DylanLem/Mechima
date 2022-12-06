@@ -35,7 +35,7 @@ namespace Mechima
         {
             Scale = new Vector2(2f, 2f);
 
-            this["drag"] = 95.0f;
+            this["drag"] = 0.999f;
 
             this.ActionMap = new Dictionary<ActionType, Action>()
             {
@@ -55,8 +55,20 @@ namespace Mechima
 
 
 
-           
+            foreach (ICollidable collidable in GameManager.GetCollidables())
+            {
+                if (collidable == this || (collidable is Item item && Items.Contains(item)))
+                    continue;
 
+                if(CheckCollision(collidable))
+                    if(collidable is Creature c)
+                    {
+                        float overlap = Vector2.Distance(this.Collider.Position, collidable.Collider.Position) - (this.Collider.Radius + collidable.Collider.Radius);
+                        Vector2 v = GameManager.MakeVector((this.WorldPosition - c.WorldPosition).ToAngle(), overlap);
+                        
+                        this.ForceVector += v;
+                    }
+            }
 
             this.Color = Color.White;
         }
@@ -76,6 +88,8 @@ namespace Mechima
         
         public bool CheckCollision(ICollidable collidable)
         {
+            if (Vector2.Distance(this.Collider.Position, collidable.Collider.Position) < this.Collider.Radius + collidable.Collider.Radius)
+                return true;
             return false;
         }
 

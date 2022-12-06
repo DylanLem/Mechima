@@ -9,7 +9,7 @@ namespace Mechima
     {
         public bool isActive = false;
         public Creature Owner;
-
+        private List<ICollidable> collidedEntities = new List<ICollidable>();
 
 
 
@@ -49,7 +49,7 @@ namespace Mechima
 
                 foreach (ICollidable collidable in GameManager.GetCollidables())
                 {
-                    if (collidable != this && collidable != this.Owner && CheckCollision(collidable))
+                    if (collidable != this && collidable != this.Owner && !collidedEntities.Contains(collidable) && CheckCollision(collidable))
                     {
 
                         DisplayManager.RequestBlit(new BlitRequest("HIT!", Color.White, this.ScreenPosition + new Vector2(0, 10), AnchorPoint.TopCenter));
@@ -59,6 +59,7 @@ namespace Mechima
                             Vector2 d = GameManager.MakeVector(this.Rotation, 5);
 
                             entity.ForceVector += (d * (1 + MathF.Log2(Velocity.Length())));
+                            collidedEntities.Add(collidable);
                             this.Delete();
                         }
 
