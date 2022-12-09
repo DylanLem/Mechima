@@ -68,7 +68,7 @@ namespace Mechima
                 if (this.AnimData.CurrentFrame.Value == this.AnimData.Animations[this.AnimData.CurrentFrame.Key][this.AnimData.Animations[this.AnimData.CurrentFrame.Key].Count - 1])
                     this.AnimData.animTimer = 0;
 
-                Graphics.MakeLinePrimitive(Color.Red*0.1f, this.WorldPosition + (laserLine / 2), Rotation, new Vector2(1,laserLine.Length())); //laser laser laser :) :) :)
+                Graphics.DrawLinePrimitive(Color.Red*0.1f, this.WorldPosition + (laserLine / 2), Rotation, new Vector2(1,laserLine.Length())); //laser laser laser :) :) :)
 
                 projectile.Rotation = this.Rotation;
                 projectile.WorldPosition = this.WorldPosition;

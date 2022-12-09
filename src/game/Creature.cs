@@ -53,7 +53,7 @@ namespace Mechima
         {
             base.Update(gameTime);
 
-
+            Graphics.DrawCirclePrimitive(Color.Red, this.Collider.Position, this.Collider.Radius);
 
             foreach (ICollidable collidable in GameManager.GetCollidables())
             {

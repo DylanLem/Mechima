@@ -88,7 +88,7 @@ namespace Mechima
         }
 
 
-        public static void LoadTextures(ContentManager content)
+        public static void LoadTextures(Microsoft.Xna.Framework.Content.ContentManager content)
         {
             foreach (string spritename in spritePaths)
                 spriteMap[spritename] = content.Load<Texture2D>(spritename);
@@ -117,7 +117,7 @@ namespace Mechima
         public static AnimData GetAnim(string spriteName)
         {
             if (!AnimationMap.ContainsKey(spriteName))
-                AnimationMap[spriteName] = ContentLoader.LoadAnimation(spriteName);
+                AnimationMap[spriteName] = ContentManager.LoadAnimation(spriteName);
 
            
 

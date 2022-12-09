@@ -21,7 +21,7 @@ namespace Mechima
         {
             get => new Circle()
             {
-                Position = this.WorldPosition + new Vector2(0,Texture.Height/2),
+                Position = this.WorldPosition + (new Vector2(0,Texture.Height/2).Rotate(Rotation)),
                 Radius = (Scale.X * (float)this.SpriteCell.Width / 2)
             };
         }
@@ -41,6 +41,7 @@ namespace Mechima
 
         public override void Update(GameTime gameTime)
         {
+            Graphics.DrawCirclePrimitive(Color.Red, this.Collider.Position, this.Collider.Radius);
             if (isActive)
             {
                 

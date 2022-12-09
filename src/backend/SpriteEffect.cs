@@ -19,9 +19,7 @@ namespace Mechima
         }
         public override void Update()
         {
-            Color[] data = new Color[1];
-
-            this.Texture.GetData<Color>(data);
+            
             
             if (timer > LifeTime)
                 this.DeleteDrawable();

@@ -31,10 +31,15 @@ namespace Mechima
             return MathF.Atan2(vector.Y, vector.X) - MathF.PI/2;
         }
 
+        public static Vector2 Rotate(this Vector2 vector, float angle)
+        {
+            return GameManager.MakeVector(angle,vector.Length());
+
+        }
+
         public static void RotateFromParent(this Item item)
         {
-            item.Rotation = GameManager.lerpRotation(item.Rotation, (item.ParentCreature.WorldPosition - item.ParentCreature.TargetPosition.Invoke()).ToAngle(), item.lookSpeed) ;
-            
+            item.Rotation = GameManager.lerpRotation(item.Rotation, (item.ParentCreature.WorldPosition - item.ParentCreature.TargetPosition.Invoke()).ToAngle(), item.lookSpeed) ;           
         }
         
         public static void Delete(this Entity e)
