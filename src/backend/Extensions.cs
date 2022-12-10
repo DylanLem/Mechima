@@ -44,7 +44,7 @@ namespace Mechima
         
         public static void Delete(this Entity e)
         {
-            GameManager.PoppedEntities.Add(e);
+            GameManager.CurrentScene.PoppedEntities.Add(e);
         }
 
     }

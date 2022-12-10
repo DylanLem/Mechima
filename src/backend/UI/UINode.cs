@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mechima
 {
-    class UINode: Clickable
+    public class UINode: Clickable
     {
         public UINode Parent { get; private set; }
         public List<UINode> Children { get; private set; }

@@ -42,7 +42,7 @@ namespace Mechima
             this["firePower"] = 400;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             this.RotateFromParent();
 
@@ -88,7 +88,7 @@ namespace Mechima
                 
             }
 
-            base.Update(gameTime);
+            base.Update();
         }
 
 

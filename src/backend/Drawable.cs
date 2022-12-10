@@ -26,7 +26,7 @@ namespace Mechima
 
         public float Rotation { get; set; }
         protected bool IsDrawn { get; set; } = false;
-        public bool IsAnimated { get; set; }
+       
         public AnimData AnimData { get; set; }
 
 
@@ -46,7 +46,7 @@ namespace Mechima
         {
             DisplayManager.AddSprite(this);
          
-            IsAnimated = false;
+            
             Color = Color.White;
             
         }
@@ -61,9 +61,9 @@ namespace Mechima
             sb.Draw(this.Texture, this.ScreenPosition, this.SpriteCell, this.Color, Rotation, this.SpriteCell.Size.ToVector2()/2, Scale, SpriteEffects.None, 0);
         }
 
-        public virtual void Update()
+        public virtual void UpdateSprite()
         {
-            if (IsAnimated && AnimData != null)
+            if (AnimData != null)
                 AnimData.Animate();
 
             DetermineScreenPosition();
@@ -74,7 +74,7 @@ namespace Mechima
         public void SetSprite(string sprite, bool animated = false)
         {
             this._texture = sprite != null ? DisplayManager.spriteMap[sprite] : DisplayManager.spriteMap["player_new"];
-            this.IsAnimated = animated;
+            
 
             
             this.AnimData = DisplayManager.GetAnim(sprite);
@@ -87,7 +87,7 @@ namespace Mechima
         {
             this._texture = sprite;
 
-            this.IsAnimated = animated;
+            
 
             IsDrawn = true;
         }

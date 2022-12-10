@@ -55,7 +55,7 @@ namespace Mechima
         }
 
        
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
 
             if (ParentCreature != null)
@@ -131,7 +131,7 @@ namespace Mechima
                 this.lookSpeed = 0.15f;
             }
 
-            base.Update(gameTime);
+            base.Update();
         }
 
         public bool CheckCollision(ICollidable collidable)

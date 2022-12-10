@@ -22,11 +22,11 @@ namespace Mechima
         public abstract List<ItemTag> Tags { get; }
 
         public float lookSpeed = 0.15f;
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             if (IsAnchored && ParentCreature != null)
 
-                base.Update(gameTime);
+                base.Update();
         }
 
         

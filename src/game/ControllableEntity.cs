@@ -56,10 +56,10 @@ namespace Mechima
 
         
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             InvokeQueuedActions();
-            base.Update(gameTime);
+            base.Update();
         }
 
     }

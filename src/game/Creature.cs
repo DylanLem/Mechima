@@ -49,9 +49,9 @@ namespace Mechima
         }
 
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
-            base.Update(gameTime);
+            base.Update();
 
             Graphics.DrawCirclePrimitive(Color.Red, this.Collider.Position, this.Collider.Radius);
 

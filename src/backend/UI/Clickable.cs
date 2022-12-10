@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mechima 
 {
-    class Clickable: Drawable
+    public class Clickable: Drawable
     {
         EventHandler OnMouseDown { get; set; }
         EventHandler OnMouseUp { get; set; }

@@ -30,7 +30,7 @@ namespace Mechima
 
             brain.GenerateGoal(goal);
 
-            GameManager.NPCs.Add(brain);
+            GameManager.CurrentScene.NPCs.Add(brain);
 
             return brain;
 

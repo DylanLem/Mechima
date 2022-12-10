@@ -7,17 +7,7 @@ namespace Mechima
 {
     public static class InputManager
     {
-        public static event InputNotifier MouseMoved, MouseLeftDown, MouseLeftUp, MouseRightDown, MouseRightUp;
-
-
-        private static bool scrollwheel { get  {
-                int state = Mouse.GetState().ScrollWheelValue;
-                int val =  state - lastScrollWheel;
-                lastScrollWheel = state;
-                return val>0;
-            } }
-
-        private static int lastScrollWheel = 0;
+        
 
         /// <summary>
         /// Checks the state of all inputs in the control map and creates a list of ActionType for game logic.
@@ -53,10 +43,6 @@ namespace Mechima
 
 
 
-            if (scrollwheel)
-            {
-                System.Diagnostics.Debug.WriteLine("scrollling up");
-            }
 
             return actions;
         }

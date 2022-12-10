@@ -50,7 +50,7 @@ namespace Mechima
                 Modifiers[name] = value;
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update()
         {
             if (Texture == null)
                 IsDrawn = false;
@@ -59,7 +59,7 @@ namespace Mechima
 
             if (this.Velocity.Length() > 0) 
             {
-                Move((this.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                Move((this.Velocity * (float)GameManager.lastTick));
                 this.Velocity = (this.Velocity * (1-(this["drag"]*GameManager.lastTick)));
             } 
 

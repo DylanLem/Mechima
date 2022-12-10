@@ -39,7 +39,7 @@ namespace Mechima
 
 
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             Graphics.DrawCirclePrimitive(Color.Red, this.Collider.Position, this.Collider.Radius);
             if (isActive)
@@ -72,7 +72,7 @@ namespace Mechima
             }
             
 
-            base.Update(gameTime);
+            base.Update();
         }
 
     }
